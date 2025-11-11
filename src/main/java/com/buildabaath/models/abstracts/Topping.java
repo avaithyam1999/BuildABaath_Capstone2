@@ -4,17 +4,13 @@ import com.buildabaath.interfaces.Priceable;
 
 public abstract class Topping implements Priceable {
     private String name;
-    private double priceForSmall;
-    private double priceForMedium;
-    private double priceForLarge;
+    private double basePrice;
     private boolean extra;
 
-    public Topping(String name, double priceForSmall, double priceForMedium, double priceForLarge, boolean extra) {
+    public Topping(String name, double basePrice, boolean extra) {
         this.name = name;
-        this.priceForSmall = priceForSmall;
-        this.priceForMedium = priceForMedium;
-        this.priceForLarge = priceForLarge;
-        this.extra = false;
+        this.basePrice = basePrice;
+        this.extra = extra;
     }
 
     public String getName() {
@@ -25,28 +21,12 @@ public abstract class Topping implements Priceable {
         this.name = name;
     }
 
-    public double getPriceForSmall() {
-        return priceForSmall;
+    public double getBasePrice() {
+        return basePrice;
     }
 
-    public void setPriceForSmall(double priceForSmall) {
-        this.priceForSmall = priceForSmall;
-    }
-
-    public double getPriceForMedium() {
-        return priceForMedium;
-    }
-
-    public void setPriceForMedium(double priceForMedium) {
-        this.priceForMedium = priceForMedium;
-    }
-
-    public double getPriceForLarge() {
-        return priceForLarge;
-    }
-
-    public void setPriceForLarge(double priceForLarge) {
-        this.priceForLarge = priceForLarge;
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
     }
 
     public boolean isExtra() {
@@ -57,6 +37,19 @@ public abstract class Topping implements Priceable {
         this.extra = extra;
     }
 
-    @Override
-    public abstract double calculatePrice();
+    public double getToppingSizeMultiplier(String size) {
+        switch (size.trim().toLowerCase()) {
+            case "small" -> {
+                return 1.0;
+            }
+            case "medium" -> {
+                return 2.0;
+            }
+            case "large" -> {
+                return 3.0;
+            }
+        }
+    }
+
+    public abstract double calculatePrice(String size);
 }

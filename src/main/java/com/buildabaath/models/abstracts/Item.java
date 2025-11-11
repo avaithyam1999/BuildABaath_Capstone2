@@ -6,7 +6,7 @@ public abstract class Item implements Priceable {
     private String name;
     private double price;
 
-    public Item(String name, double price) {
+    public Item(String name) {
         this.name = name;
         this.price = 0.0;
     }
