@@ -24,24 +24,21 @@ public class UserInterface {
 
             switch (mainMenuChoice) {
                 case 1 -> {
-                    System.out.println("""
-                            =========Menu=========
-                            
-                            Main Item Type:
-                                - Baath Bowl
-                                - Kati Roll
-                                - 
-                            """);
+                    try {
+                        System.out.println("Select your main item");
+
+                    }
                 }
                 case 2 -> {
-                    System.out.println("""
-                            =========Order Menu=========
-                            Select an Option:
-                            1. Order a Combo
-                            2. Order A la Carte
-                            3. Edit Cart
-                            4. Ready to Checkout
-                            """);
+
+//                    System.out.println("""
+//                            =========Order Menu=========
+//                            Select an Option:
+//                            1. Order a Combo
+//                            2. Order A la Carte
+//                            3. Edit Cart
+//                            4. Ready to Checkout
+//                            """);
                     int orderMenuChoice = scanner.nextInt();
                     scanner.nextLine();
 
