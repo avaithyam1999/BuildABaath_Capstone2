@@ -3,6 +3,9 @@ package com.buildabaath.models;
 import com.buildabaath.Order;
 import com.buildabaath.models.abstracts.Item;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -46,7 +49,13 @@ public class ReceiptWriter {
     }
 
     private void SaveToFile() {
-
+        try {
+            BufferedWriter buffWriter = new BufferedWriter(new FileWriter("receipts/" + fileName));
+            buffWriter.write(generateFileName());
+            buffWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
