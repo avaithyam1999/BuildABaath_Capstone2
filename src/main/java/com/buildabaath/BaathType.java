@@ -67,5 +67,6 @@ public class BaathType {
                 return basePriceLarge;
             }
         }
+        return 0.0;
     }
 }

@@ -29,4 +29,5 @@ public abstract class Item implements Priceable {
 
     @Override
     public abstract double calculatePrice();
+    public abstract String getDescription();
 }

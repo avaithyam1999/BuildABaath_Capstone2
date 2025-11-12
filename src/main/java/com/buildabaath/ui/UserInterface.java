@@ -1,62 +1,39 @@
 package com.buildabaath.ui;
 
+import com.buildabaath.Order;
+
 import java.util.Scanner;
 
 public class UserInterface {
     private Scanner scanner;
 
-    public void displayMainMenu() {
+    public void startProgram() {
         System.out.println("Welcome to Build a Baath! - Your favorite Build your Own Concept!");
 
         boolean mainProgramRunning = true;
-
         mainLoop:
         while (mainProgramRunning) {
             System.out.println("""
-                    =========Build-A-Baath=========
-                    Select an option:
-                    1. View Menu
-                    2. Order
-                    3. I'd like to leave now
+                    ==========Build A Baath==========
+                    Please Select an Option:
+                    1. New Order
+                    2. Never mind, I like bland food
                     """);
-            int mainMenuChoice = scanner.nextInt();
+            int mainUserChoice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (mainMenuChoice) {
+            switch (mainUserChoice) {
                 case 1 -> {
-                    try {
-                        System.out.println("Select your main item");
+                    Order currentOrder = new Order();
+                    boolean orderRunning = true;
+                    orderLoop:
+                    while (orderRunning) {
 
                     }
                 }
                 case 2 -> {
-
-//                    System.out.println("""
-//                            =========Order Menu=========
-//                            Select an Option:
-//                            1. Order a Combo
-//                            2. Order A la Carte
-//                            3. Edit Cart
-//                            4. Ready to Checkout
-//                            """);
-                    int orderMenuChoice = scanner.nextInt();
-                    scanner.nextLine();
-
-                    switch (orderMenuChoice) {
-                        case 1 -> {
-
-                        }
-                    }
-                }
-                case 3 -> {
-                    System.out.println("Are you sure you want to leave?");
-                    String userQuitChoice1 = scanner.nextLine();
-
-                    switch (userQuitChoice1) {
-                        case "yes" -> {
-                            System.out.println("Are you sure");
-                        }
-                    }
+                    System.out.println("Thanks for visiting Build a Baath and have a tasty day");
+                    break mainLoop;
                 }
             }
         }
