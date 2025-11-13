@@ -12,10 +12,6 @@ public class RegularTopping extends Topping {
         return 0;
     }
 
-    @Override
-    public double calculatePrice() {
-        return 0;
-    }
 
 
 }

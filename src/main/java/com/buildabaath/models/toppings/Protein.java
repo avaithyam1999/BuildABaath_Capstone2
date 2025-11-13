@@ -46,10 +46,4 @@ public class Protein extends Topping {
         }
         return price;
     }
-
-
-    @Override
-    public double calculatePrice() {
-        return 0;
-    }
 }

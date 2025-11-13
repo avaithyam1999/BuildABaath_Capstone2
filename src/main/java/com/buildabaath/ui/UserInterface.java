@@ -1,6 +1,8 @@
 package com.buildabaath.ui;
 
+import com.buildabaath.models.products.Drink;
 import com.buildabaath.models.products.Order;
+import com.buildabaath.models.products.Side;
 import com.buildabaath.models.properties.MainItemType;
 import com.buildabaath.models.toppings.PremiumTopping;
 import com.buildabaath.models.toppings.Protein;
@@ -57,7 +59,15 @@ public class UserInterface {
                             case 1 -> {
                                 try {
                                     System.out.println("=====Select your Main=====");
-                                    ArrayList<MainItemType> types = get();
+                                    ArrayList<MainItemType> types = loadMainItemTypes();
+                                    int counter = 1;
+                                    for (MainItemType itemType : types) {
+                                        counter ++;
+                                        System.out.printf("%d) %s",counter, itemType);
+                                    }
+
+                                } catch (Exception e) {
+                                    System.out.println("BING BONG");
                                 }
                             }
                             case 2 -> {
@@ -83,6 +93,7 @@ public class UserInterface {
                     System.out.println("Thanks for visiting Build a Baath and have a tasty day");
                     break mainLoop;
                 }
+                default -> throw new IllegalStateException("Unexpected value: " + mainUserChoice);
             }
         }
     }
@@ -103,7 +114,7 @@ public class UserInterface {
         proteins.add(new Protein("Paneer Tikka"));
         proteins.add(new Protein("Malai Paneer"));
         proteins.add(new Protein("Mutton Keema"));
-        proteins.add(new Protein("King Fish Curry"));
+        proteins.add(new Protein("Nandu(Crab) Curry"));
         return proteins;
     }
 
@@ -135,7 +146,27 @@ public class UserInterface {
         sauces.add(new Sauce("Butter Masala Gravy"));
         sauces.add(new Sauce("Kadhai Gravy"));
         sauces.add(new Sauce("Dahi"));
-        sauces.add(new Sauce(""));
+        sauces.add(new Sauce("Rasam"));
+        sauces.add(new Sauce("Coconut Chutney"));
+        sauces.add(new Sauce("Mint Chutney"));
         return sauces;
     }
+
+    private ArrayList<Side> loadSides() {
+        ArrayList<Side> sides = new ArrayList<>();
+        sides.add(new Side("Chicken Tikka Samosa"));
+        sides.add(new Side("Paneer Tikka Samosa"));
+        return sides;
+    }
+
+    private ArrayList<Drink> loadDrinks() {
+        ArrayList<Drink> drinks = new ArrayList<>();
+        drinks.add(new Drink("Filter Coffee"));
+        drinks.add(new Drink("Masala Tea"));
+        drinks.add(new Drink("Badam Milk"));
+        drinks.add(new Drink("Thums Up"));
+        drinks.add(new Drink("Maaza"));
+        return drinks;
+    }
+
 }

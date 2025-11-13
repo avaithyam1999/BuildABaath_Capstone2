@@ -1,8 +1,7 @@
 package com.buildabaath.models.abstracts;
 
-import com.buildabaath.interfaces.Priceable;
 
-public abstract class Topping implements Priceable {
+public abstract class Topping {
     private String name;
     private boolean extra;
 
@@ -26,6 +25,7 @@ public abstract class Topping implements Priceable {
     public void setExtra(boolean extra) {
         this.extra = extra;
     }
+
 
     public abstract double getPrice(String size);
 }
