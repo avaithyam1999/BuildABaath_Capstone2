@@ -4,11 +4,11 @@ import com.buildabaath.interfaces.Priceable;
 
 public abstract class Item implements Priceable {
     private String name;
-    private double price;
+    private double basePrice;
 
-    public Item(String name) {
+    public Item(String name, double basePrice) {
         this.name = name;
-        this.price = 0.0;
+        this.basePrice = 0.0;
     }
 
     public String getName() {
@@ -19,12 +19,12 @@ public abstract class Item implements Priceable {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price;
+    public double getBasePrice() {
+        return basePrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
     }
 
     @Override

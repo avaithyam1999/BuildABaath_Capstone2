@@ -1,7 +1,7 @@
 package com.buildabaath.models;
 
-import com.buildabaath.Order;
 import com.buildabaath.models.abstracts.Item;
+import com.buildabaath.models.products.Order;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -20,7 +20,7 @@ public class ReceiptWriter {
 
     private String formatDateTime() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
-        return order.getOrderTime().format(formatter)
+        return order.getOrderTime().format(formatter);
     }
 
     private String generateFileName() {

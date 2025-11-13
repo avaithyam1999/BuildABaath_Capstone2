@@ -1,9 +1,8 @@
-package com.buildabaath;
+package com.buildabaath.models.products;
 
 import com.buildabaath.models.abstracts.Item;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Random;
 
