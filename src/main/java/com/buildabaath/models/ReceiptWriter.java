@@ -48,7 +48,7 @@ public class ReceiptWriter {
         return receipt;
     }
 
-    private void SaveToFile() {
+    public void saveReceiptToFile() {
         try {
             BufferedWriter buffWriter = new BufferedWriter(new FileWriter("receipts/" + fileName));
             buffWriter.write(generateFileName());

@@ -8,7 +8,7 @@ public abstract class Item implements Priceable {
 
     public Item(String name, double basePrice) {
         this.name = name;
-        this.basePrice = 0.0;
+        this.basePrice = basePrice;
     }
 
     public String getName() {

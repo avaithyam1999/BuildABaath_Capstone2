@@ -8,7 +8,7 @@ public class Drink extends Item {
     private double mediumPrice;
     private double largePrice;
 
-    public Drink(String name) {
+    public Drink(String name, String size) {
         super(name, 0.0);
         this.size = size;
         this.smallPrice = 3.00;
@@ -18,18 +18,13 @@ public class Drink extends Item {
 
     @Override
     public double calculatePrice() {
-        switch (size.trim().toLowerCase()) {
-            case "small" -> {
-                return smallPrice;
-            }
-            case "medium" -> {
-                return mediumPrice;
-            }
-            case "large" -> {
-                return largePrice;
-            }
-        }
-        return smallPrice;
+        return switch (size.trim().toLowerCase()) {
+            case "medium" -> mediumPrice;
+
+            case "large" -> largePrice;
+
+            default -> smallPrice;
+        };
     }
 
     @Override

@@ -90,17 +90,51 @@ public class MainItem extends Item implements Customizable {
 
     @Override
     public double calculatePrice() {
-        return 0;
+        double total = getBasePrice();
+        if (protein != null) {
+            total += protein.getPrice(size);
+        }
+        for (PremiumTopping premiumTopping : premiumToppings) {
+            total += premiumTopping.getPrice(size);
+        }
+        return total;
     }
 
     @Override
     public String getDescription() {
-        return "";
+        String description = size + " " + getName();
+
+        if (protein != null) {
+            description += "\n - " + protein.getName();
+            if (protein.isExtra()) {
+                description += " (Extra Protein)";
+            }
+        }
+
+        for (PremiumTopping premiumTopping : premiumToppings) {
+            description += "\n - " + premiumTopping.getName();
+            if (premiumTopping.isExtra()) {
+                description += " (Extra Premium Topping)";
+            }
+        }
+
+        for (RegularTopping regularTopping : regularToppings) {
+            description += "\n - " + regularTopping.getName();
+        }
+
+        for (Sauce sauce : sauces) {
+            description += "\n - " + sauce.getName();
+        }
+
+        if (specialtyItem) {
+            description += "\n - ***SPECIALTY ITEM***";
+        }
+
+        return description;
     }
 
     @Override
     public void customize() {
-
     }
 }
 

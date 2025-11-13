@@ -10,7 +10,7 @@ public class Side extends Item {
 
     @Override
     public double calculatePrice() {
-        return 0;
+        return getBasePrice();
     }
 
     @Override

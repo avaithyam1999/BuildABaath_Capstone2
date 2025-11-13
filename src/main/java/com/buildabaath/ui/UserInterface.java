@@ -1,6 +1,7 @@
 package com.buildabaath.ui;
 
 import com.buildabaath.models.products.Drink;
+import com.buildabaath.models.products.MainItem;
 import com.buildabaath.models.products.Order;
 import com.buildabaath.models.products.Side;
 import com.buildabaath.models.properties.MainItemType;
@@ -46,40 +47,48 @@ public class UserInterface {
                                 ==========Order Screen==========
                                 Items already in Order: %d
                                 1. Add Main Item
-                                2. Add Drink
-                                3. Add a Side Item
-                                4. Add Dessert
-                                5. View Order Details
-                                6. Cancel Order
+                                2. Add a Specialty Item
+                                3. Add Drink
+                                4. Add a Side Item
+                                5. Add Dessert
+                                6. View Order Details
+                                7. Cancel Order
                                 """, currentOrder.getItems().size());
                         int userOrderMenuChoice = scanner.nextInt();
                         scanner.nextLine();
 
                         switch (userOrderMenuChoice) {
                             case 1 -> {
-                                try {
-                                    System.out.println("=====Select your Main=====");
-                                    ArrayList<MainItemType> types = loadMainItemTypes();
-                                    int counter = 1;
-                                    for (MainItemType itemType : types) {
-                                        counter ++;
-                                        System.out.printf("%d) %s",counter, itemType);
-                                    }
-
-                                } catch (Exception e) {
-                                    System.out.println("BING BONG");
+                                System.out.println("=====Select your Main=====");
+                                ArrayList<MainItemType> types = loadMainItemTypes();
+                                int counter = 1;
+                                for (MainItemType itemType : types) {
+                                    System.out.printf("%d) %s",counter++, itemType.getDisplayName(), itemType.getPrice("small"), itemType.getPrice("medium", itemType.getPrice("large")));
                                 }
-                            }
-                            case 2 -> {
-//                                addDrink();
+                                int itemTypeChoice = scanner.nextInt();
+                                scanner.nextLine();
+                                MainItemType selectedType = types.get(itemTypeChoice - 1);
+                                System.out.println(itemTypeChoice + "selected.\n Which size would you like?\n1. Small\n2. Medium\n3. Large");
+                                int sizeChoice = scanner.nextInt();
+                                scanner.nextLine();
+                                String size = switch (sizeChoice) {
+                                    case 2 -> "medium";
+                                    case 3 -> "large";
+                                    default -> "small";
+                                };
+                                MainItem item = new MainItem(selectedType, size);
+
                             }
                             case 3 -> {
-//                                addSideItem();
+//                                addDrink();
                             }
                             case 4 -> {
-//                                viewOrder();
+//                                addSideItem();
                             }
                             case 5 -> {
+//                                viewOrder();
+                            }
+                            case 6 -> {
 //                                checkout()
 //                                ordering = false;
                             }
@@ -161,11 +170,21 @@ public class UserInterface {
 
     private ArrayList<Drink> loadDrinks() {
         ArrayList<Drink> drinks = new ArrayList<>();
-        drinks.add(new Drink("Filter Coffee"));
-        drinks.add(new Drink("Masala Tea"));
-        drinks.add(new Drink("Badam Milk"));
-        drinks.add(new Drink("Thums Up"));
-        drinks.add(new Drink("Maaza"));
+        drinks.add(new Drink("Filter Coffee", "small"));
+        drinks.add(new Drink("Filter Coffee", "medium"));
+        drinks.add(new Drink("Filter Coffee", "large"));
+        drinks.add(new Drink("Masala Tea", "small"));
+        drinks.add(new Drink("Masala Tea", "medium"));
+        drinks.add(new Drink("Masala Tea", "large"));
+        drinks.add(new Drink("Badam Milk", "small"));
+        drinks.add(new Drink("Badam Milk", "medium"));
+        drinks.add(new Drink("Badam Milk", "large"));
+        drinks.add(new Drink("Thums Up", "small"));
+        drinks.add(new Drink("Thums Up", "medium"));
+        drinks.add(new Drink("Thums Up", "large"));
+        drinks.add(new Drink("Maaza", "small"));
+        drinks.add(new Drink("Maaza", "medium"));
+        drinks.add(new Drink("Maaza", "large"));
         return drinks;
     }
 

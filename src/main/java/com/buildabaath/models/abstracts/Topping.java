@@ -7,7 +7,7 @@ public abstract class Topping {
 
     public Topping(String name) {
         this.name = name;
-        this.extra = extra;
+        this.extra = false;
     }
 
     public String getName() {

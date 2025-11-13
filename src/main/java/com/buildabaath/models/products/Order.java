@@ -56,4 +56,20 @@ public class Order {
         int randomIDNum = random.nextInt(999) + 100;
         return String.format("ORDER NUMBER: %d", randomIDNum);
     }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public void updateTotalPrice() {
+        totalPrice = 0.0;
+        for (Item item : items) {
+            totalPrice += item.calculatePrice();
+        }
+    }
+
+    public void emptyOrder() {
+        items.clear();
+        totalPrice = 0.0;
+    }
 }
