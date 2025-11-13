@@ -15,11 +15,9 @@ import java.util.Scanner;
 
 public class UserInterface {
     private Scanner scanner;
-    private Order order;
 
     public UserInterface() {
         this.scanner = new Scanner(System.in);
-        this.order = null;
     }
 
     public void startProgram() {
@@ -41,8 +39,7 @@ public class UserInterface {
                 case 1 -> {
                     Order currentOrder = new Order();
                     boolean orderRunning = true;
-                    orderLoop:
-                    while (orderRunning) {
+                    orderLoop: while (orderRunning) {
                         System.out.printf("""
                                 ==========Order Screen==========
                                 Items already in Order: %d
@@ -61,9 +58,9 @@ public class UserInterface {
                             case 1 -> {
                                 System.out.println("=====Select your Main Item=====");
                                 ArrayList<MainItemType> types = loadMainItemTypes();
-                                int counter = 1;
+                                int mainItemCounter = 1;
                                 for (MainItemType itemType : types) {
-                                    System.out.printf("%d) %s (Small: $%.2f, Medium: $%.2f, Large: $%.2f)\n",counter++, itemType.getDisplayName(), itemType.getPrice("small"), itemType.getPrice("medium"), itemType.getPrice("large"));
+                                    System.out.printf("%d) %s (Small: $%.2f, Medium: $%.2f, Large: $%.2f)\n",mainItemCounter++, itemType.getDisplayName(), itemType.getPrice("small"), itemType.getPrice("medium"), itemType.getPrice("large"));
                                 }
 
                                 int itemTypeChoice = scanner.nextInt();
@@ -75,7 +72,7 @@ public class UserInterface {
                                 }
 
                                 MainItemType selectedType = types.get(itemTypeChoice - 1);
-                                System.out.println(itemTypeChoice + "selected.\n Which size would you like?\n1. Small\n2. Medium\n3. Large");
+                                System.out.println(itemTypeChoice + "selected.\n Which size would you like?\n1. Small\n2. Medium\n3. Large\n");
                                 int sizeChoice = scanner.nextInt();
                                 scanner.nextLine();
                                 String size = switch (sizeChoice) {
@@ -85,6 +82,53 @@ public class UserInterface {
                                 };
                                 MainItem item = new MainItem(selectedType, size);
 
+                                addProteinToItem(item);
+
+                                boolean addingToppings = true;
+                                toppingLoop: while (addingToppings) {
+                                    System.out.println("""
+                                ======Add Premium Toppings=====
+                                Premium Topping Pricing:
+                                Small: $.75 ($.30 - Extra)
+                                Medium: $1.50 ($.60 - Extra)
+                                Large: $2.25 ($.90 - Extra)
+                                """);
+                                    ArrayList<PremiumTopping> premiumToppings = loadPremiumToppings();
+
+                                    int premiumToppingCounter = 1;
+                                    for (PremiumTopping premiumTopping : premiumToppings) {
+                                        System.out.printf(("%d) %s\n"), premiumToppingCounter++, premiumTopping.getName());
+                                    }
+                                    System.out.println("9) Done adding Premium Toppings\n0)Skip Premium Toppings");
+
+                                    int premiumToppingChoice = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    if (premiumToppingChoice == 9 || premiumToppingChoice == 0) {
+                                        break toppingLoop;
+                                    } else if (premiumToppingChoice > 0 && premiumToppingChoice <= premiumToppings.size()) {
+                                        PremiumTopping selectedPremiumTopping = new PremiumTopping(premiumToppings.get(premiumToppingChoice - 1).getName());
+
+                                        System.out.printf("""
+                                                Would you like extra %s?
+                                                Extra Premium Topping Pricing:
+                                                Small: $.30
+                                                Medium: $.60
+                                                Large: $.90
+                                                1. Yes
+                                                2. No
+                                                """, selectedPremiumTopping);
+                                        int extraPremiumSelection = scanner.nextInt();
+                                        selectedPremiumTopping.setExtra(extraPremiumSelection == 1);
+
+                                        item.getPremiumToppings().add(selectedPremiumTopping);
+                                        if (selectedPremiumTopping.isExtra()) {
+                                            System.out.printf("Extra %s Added!", selectedPremiumTopping);
+                                        } else if (!selectedPremiumTopping.isExtra()) {
+                                            System.out.printf("%s Added!", selectedPremiumTopping);
+                                        }
+                                    }
+                                }
                             }
                             case 3 -> {
 //                                addDrink();
@@ -111,6 +155,31 @@ public class UserInterface {
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + mainUserChoice);
             }
+        }
+    }
+
+    private void addProteinToItem(MainItem item) {
+        System.out.println("=====Select your Protein=====");
+        ArrayList<Protein> proteins = loadProteins();
+
+        int proteinCounter = 1;
+        for (Protein protein : proteins) {
+            System.out.printf("%d) %s\n", proteinCounter++, protein.getName());
+        }
+        System.out.println("0) No protein");
+
+        int proteinChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (proteinChoice > 0 && proteinChoice <= proteins.size()) {
+            Protein selectedProtein = new Protein(proteins.get(proteinChoice - 1).getName());
+
+            System.out.println("Would you like extra Protein?(Small: $.50, Medium: $1.00, Large: $1.50\n1. Yes\n2. No\n");
+            int extraProteinSelected = scanner.nextInt();
+            selectedProtein.setExtra(extraProteinSelected == 1);
+            scanner.nextLine();
+
+            item.setProtein(selectedProtein);
         }
     }
 
