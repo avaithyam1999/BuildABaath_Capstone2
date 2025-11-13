@@ -59,14 +59,21 @@ public class UserInterface {
 
                         switch (userOrderMenuChoice) {
                             case 1 -> {
-                                System.out.println("=====Select your Main=====");
+                                System.out.println("=====Select your Main Item=====");
                                 ArrayList<MainItemType> types = loadMainItemTypes();
                                 int counter = 1;
                                 for (MainItemType itemType : types) {
-                                    System.out.printf("%d) %s",counter++, itemType.getDisplayName(), itemType.getPrice("small"), itemType.getPrice("medium", itemType.getPrice("large")));
+                                    System.out.printf("%d) %s (Small: $%.2f, Medium: $%.2f, Large: $%.2f)\n",counter++, itemType.getDisplayName(), itemType.getPrice("small"), itemType.getPrice("medium"), itemType.getPrice("large"));
                                 }
+
                                 int itemTypeChoice = scanner.nextInt();
                                 scanner.nextLine();
+
+                                if (itemTypeChoice < 1 || itemTypeChoice > types.size()) {
+                                    System.out.println("That is an invalid entry.\n");
+                                    return;
+                                }
+
                                 MainItemType selectedType = types.get(itemTypeChoice - 1);
                                 System.out.println(itemTypeChoice + "selected.\n Which size would you like?\n1. Small\n2. Medium\n3. Large");
                                 int sizeChoice = scanner.nextInt();

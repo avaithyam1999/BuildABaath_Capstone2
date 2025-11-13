@@ -29,6 +29,6 @@ public class Drink extends Item {
 
     @Override
     public String getDescription() {
-        return size + " " + super.getName() + "(Drink)";
+        return size + " " + super.getName() + " (Drink)";
     }
 }
