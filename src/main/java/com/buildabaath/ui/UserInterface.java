@@ -212,13 +212,21 @@ public class UserInterface {
                                 System.out.printf("%sSelected: %s%s\n\n", ConsoleFormatter.THANOS, selectedSpecialtyName, ConsoleFormatter.RESET);
 
                                 if (specialtyChoice == 1) {
-                                    ConsoleFormatter.printMenuItem(1, "Small", 3.50);
-                                    ConsoleFormatter.printMenuItem(2, "Medium", 6.00);
-                                    ConsoleFormatter.printMenuItem(3, "Large", 8.50);
+                                    SpecialtyItem temporarySmallDeluxePrice = SpecialtyItem.createTandooriDeluxeBowl("small");
+                                    SpecialtyItem temporaryMediumDeluxePrice = SpecialtyItem.createTandooriDeluxeBowl("medium");
+                                    SpecialtyItem temporaryLargeDeluxePrice = SpecialtyItem.createTandooriDeluxeBowl("large");
+
+                                    ConsoleFormatter.printMenuItem(1, "Small", temporarySmallDeluxePrice.calculatePrice());
+                                    ConsoleFormatter.printMenuItem(2, "Medium", temporaryMediumDeluxePrice.calculatePrice());
+                                    ConsoleFormatter.printMenuItem(3, "Large", temporaryLargeDeluxePrice.calculatePrice());
                                 } else {
-                                    ConsoleFormatter.printMenuItem(1, "Small", 3.50);
-                                    ConsoleFormatter.printMenuItem(2, "Medium", 6.50);
-                                    ConsoleFormatter.printMenuItem(3, "Large", 9.00);
+                                    SpecialtyItem temporarySmallSupremePrice = SpecialtyItem.createSpicyBiryaniSupreme("small");
+                                    SpecialtyItem temporaryMediumSupremePrice = SpecialtyItem.createSpicyBiryaniSupreme("medium");
+                                    SpecialtyItem temporaryLargeSupremePrice = SpecialtyItem.createSpicyBiryaniSupreme("large");
+
+                                    ConsoleFormatter.printMenuItem(1, "Small", temporarySmallSupremePrice.calculatePrice());
+                                    ConsoleFormatter.printMenuItem(2, "Medium", temporaryMediumSupremePrice.calculatePrice());
+                                    ConsoleFormatter.printMenuItem(3, "Large", temporaryLargeSupremePrice.calculatePrice());
                                 }
                                 ConsoleFormatter.printDivider();
 
