@@ -1,4 +1,4 @@
-package com.buildabaath;
+package com.buildabaath.ui;
 
 public class ConsoleFormatter {
     // ANSI color codes

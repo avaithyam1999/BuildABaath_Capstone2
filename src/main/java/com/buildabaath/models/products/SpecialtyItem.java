@@ -53,7 +53,7 @@ public class SpecialtyItem extends MainItem {
     }
 
     public static SpecialtyItem createTandooriDeluxeBowl(String size) {
-        MainItemType riceType = new MainItemType("Rice", "Basmati Baath Bowl", 3.50, 6.00, 8.50);
+        MainItemType riceType = new MainItemType("Rice", "Basmati Baath Bowl", 5.50, 8.00, 10.50);
         SpecialtyItem item = new SpecialtyItem(riceType, "Tandoori Deluxe Bowl", size);
 
         Protein protein = new Protein("Tandoori Chicken");
@@ -73,7 +73,7 @@ public class SpecialtyItem extends MainItem {
         return item;
     }
     public static SpecialtyItem createSpicyBiryaniSupreme(String size) {
-        MainItemType biryaniType = new MainItemType("Biryani", "Dum Biryani", 4.00, 6.50, 9.00);
+        MainItemType biryaniType = new MainItemType("Biryani", "Dum Biryani", 5.50, 8.00, 10.50);
         SpecialtyItem item = new SpecialtyItem(biryaniType,"Spicy Biryani Supreme", size);
 
         Protein protein = new Protein("Mutton Keema");

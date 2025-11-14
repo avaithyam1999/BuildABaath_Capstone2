@@ -1,6 +1,5 @@
 package com.buildabaath.ui;
 
-import com.buildabaath.ConsoleFormatter;
 import com.buildabaath.models.ReceiptWriter;
 import com.buildabaath.models.abstracts.Item;
 import com.buildabaath.models.products.*;
@@ -156,6 +155,117 @@ public class UserInterface {
                                 promptUserForEnter();
                             }
                             case 2 -> {
+                                ConsoleFormatter.clearScreen();
+                                ConsoleFormatter.printHeader("SELECT SPECIALTY ITEM");
+                                System.out.println();
+
+                                System.out.printf("%s ⭐️ CHEF SELECTED SPECIALTY BOWLS ⭐️%s\n\n", ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+
+                                System.out.printf("""
+                                %s1) Tandoori Deluxe Bowl%s
+                                Base: Basmati Baath Bowl
+                                Protein: Tandoori Chicken
+                                Premium: Paneer Bhurji, Soft Boiled Egg
+                                Veggies: Cucumbers, Bell Peppers, Raw Onions, Cilantro
+                                Sauces: Butter Masala Gravy, Mint Chutney
+                                
+                                """, ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+
+                                System.out.printf("""
+                                %s2) Spicy Biryani Supreme%s
+                                Base: Dum Biryani
+                                Protein: Mutton Keema
+                                Premium: Chana Dal, Saffron Cauliflower Poriyal
+                                Veggies: Jalapeños, Raw Onions, Tomato, Cilantro
+                                Sauces: Kadhai Gravy, Rasam
+                                
+                                """, ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+
+                                ConsoleFormatter.printDivider();
+                                System.out.println("\nYour choice: ");
+                                int specialtyChoice = scanner.nextInt();
+                                scanner.nextLine();
+
+                                if (specialtyChoice < 1 || specialtyChoice > 2) {
+                                    ConsoleFormatter.printError("Invalid choice!");
+                                    promptUserForEnter();
+                                    return;
+                                }
+
+                                ConsoleFormatter.clearScreen();
+                                ConsoleFormatter.printHeader("SELECT SIZE");
+                                System.out.println();
+
+                                String selectedSpecialtyName = "";
+                                if (specialtyChoice == 1) {
+                                    selectedSpecialtyName = "Tandoori Deluxe Bowl";
+                                } else {
+                                    selectedSpecialtyName = "Spicy Biryani Supreme";
+                                }
+
+                                System.out.printf("%sSelected: %s%s\n\n", ConsoleFormatter.THANOS, selectedSpecialtyName, ConsoleFormatter.RESET);
+
+                                if (specialtyChoice == 1) {
+                                    ConsoleFormatter.printMenuItem(1, "Small", 3.50);
+                                    ConsoleFormatter.printMenuItem(2, "Medium", 6.00);
+                                    ConsoleFormatter.printMenuItem(3, "Large", 8.50);
+                                } else {
+                                    ConsoleFormatter.printMenuItem(1, "Small", 3.50);
+                                    ConsoleFormatter.printMenuItem(2, "Medium", 6.50);
+                                    ConsoleFormatter.printMenuItem(3, "Large", 9.00);
+                                }
+                                ConsoleFormatter.printDivider();
+
+                                System.out.println("\nYour choice: ");
+                                int sizeChoice = scanner.nextInt();
+                                scanner.nextLine();
+
+                                String size = "";
+                                switch (sizeChoice) {
+                                    case 1 -> {
+                                        size = "small";
+                                    }
+                                    case 2 -> {
+                                        size = "medium";
+                                    }
+                                    case 3 -> {
+                                        size = "large";
+                                    }
+                                    default -> {
+                                        System.out.println("not valid");
+                                    }
+                                }
+
+                                SpecialtyItem specialtyItem;
+                                if (specialtyChoice == 1) {
+                                    specialtyItem = SpecialtyItem.createTandooriDeluxeBowl(size);
+                                } else {
+                                    specialtyItem = SpecialtyItem.createSpicyBiryaniSupreme(size);
+                                }
+
+                                ConsoleFormatter.clearScreen();
+                                ConsoleFormatter.printHeader("CUSTOMIZE SPECIALTY ITEM?");
+                                System.out.println();
+
+                                System.out.printf("%sThis item comes pre-configured with all toppings.%s\n",
+                                        ConsoleFormatter.CYAN, ConsoleFormatter.RESET);
+                                System.out.println("Would you like to modify it?\n");
+
+                                ConsoleFormatter.printMenuItem(1, "Yes, let me customize it");
+                                ConsoleFormatter.printMenuItem(2, "No, keep it as is");
+                                ConsoleFormatter.printDivider();
+
+                                System.out.print("\nYour choice: ");
+                                int customizeChoice = scanner.nextInt();
+                                scanner.nextLine();
+
+                                if (customizeChoice == 1) {
+                                    customizeSpecialtyItem(specialtyItem);
+                                }
+
+                                currentOrder.addItem(specialtyItem);
+                                currentOrder.updateTotalPrice();
+                                ConsoleFormatter.printSuccess(String.format("%s %s added to order!", size, specialtyItem.getSpecialtyItemName()));
 
                             }
                             case 3 -> {
@@ -236,6 +346,324 @@ public class UserInterface {
         scanner.nextLine();
     }
 
+    private void customizeSpecialtyItem(SpecialtyItem item) {
+        boolean customizing = true;
+
+        customizingLoop: while (customizing) {
+            ConsoleFormatter.clearScreen();
+            ConsoleFormatter.printHeader("CUSTOMIZE SPECIALTY ITEM");
+            System.out.println();
+
+            System.out.printf("%sCurrent Configuration:%s\n",
+                    ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+            System.out.println(item.getDescription());
+            System.out.println();
+
+            ConsoleFormatter.printDivider();
+            ConsoleFormatter.printMenuItem(1, "🥩 Modify Protein");
+            ConsoleFormatter.printMenuItem(2, "⭐ Add/Remove Premium Toppings");
+            ConsoleFormatter.printMenuItem(3, "🥗 Add/Remove Regular Toppings");
+            ConsoleFormatter.printMenuItem(4, "🍛 Add/Remove Sauces");
+            ConsoleFormatter.printMenuItem(0, "✓ Done Customizing");
+            ConsoleFormatter.printDivider();
+
+            System.out.print("\nYour choice: ");
+            int specialtyChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (specialtyChoice) {
+                case 1 -> {
+                    modifySpecialtyProtein(item);
+                }
+                case 2 -> {
+                    modifyPremiumTopping(item);
+                }
+                case 3 -> {
+                    modifyRegularToppings(item);
+                }
+                case 4 -> {
+                    modifySauces(item);
+                }
+                case 0 -> {
+                    break customizingLoop;
+                }
+            }
+        }
+    }
+
+    private void modifySpecialtyProtein(SpecialtyItem item) {
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("MODIFY PROTEIN");
+        System.out.println();
+
+        String currentProtein;
+        if (item.getProtein() != null) {
+            currentProtein = item.getProtein().getName();
+        } else {
+            currentProtein = "None";
+        }
+
+        System.out.printf("%sCurrent Protein:%s %s\n\n",
+                ConsoleFormatter.YELLOW, ConsoleFormatter.RESET, currentProtein);
+
+        ConsoleFormatter.printMenuItem(1, "Change Protein");
+        ConsoleFormatter.printMenuItem(2, "Remove Protein");
+        ConsoleFormatter.printMenuItem(3, "Make it Extra");
+        ConsoleFormatter.printMenuItem(0, "Go Back");
+        ConsoleFormatter.printDivider();
+
+        System.out.print("\nYour choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
+            case 1 -> {
+                item.setProtein(null);
+                addProteinToItem(item);
+            }
+            case 2 -> {
+                item.setProtein(null);
+                ConsoleFormatter.printSuccess("Protein removed!");
+                promptUserForEnter();
+            }
+            case 3 -> {
+                if (item.getProtein() != null) {
+                    item.getProtein().setExtra(true);
+                    ConsoleFormatter.printSuccess("Protein is now extra!");
+                } else {
+                    ConsoleFormatter.printError("No protein to make extra!");
+                }
+                promptUserForEnter();
+            }
+        }
+    }
+
+    private void modifyPremiumTopping(SpecialtyItem item) {
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("MODIFY PREMIUM TOPPINGS");
+        System.out.println();
+
+        System.out.printf("%sCurrent Premium Toppings:%s\n",
+                ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+        if (item.getPremiumToppings().isEmpty()) {
+            System.out.println("None");
+        } else {
+            int counter = 1;
+            for (PremiumTopping premiumTopping : item.getPremiumToppings()) {
+                String extraPremiumTopping = "";
+                if (premiumTopping.isExtra()) {
+                    extraPremiumTopping = " (Extra)";
+                } else {
+                    extraPremiumTopping = "";
+                }
+                System.out.printf("  %d. %s%s\n", counter++, premiumTopping.getName(), extraPremiumTopping);
+            }
+        }
+        System.out.println();
+
+        ConsoleFormatter.printMenuItem(1, "Add Premium Topping");
+        ConsoleFormatter.printMenuItem(2, "Remove Premium Topping");
+        ConsoleFormatter.printMenuItem(3, "Make Topping Extra");
+        ConsoleFormatter.printMenuItem(0, "Go Back");
+
+        System.out.println("\nYour choice: ");
+
+        int premiumToppingChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (premiumToppingChoice) {
+            case 1 -> {
+                addPremiumToppingsToItem(item);
+            }
+            case 2 -> {
+                removePremiumToppingsFromItem(item);
+            }
+            case 3 -> {
+                makeSpecialtyPremiumToppingExtra(item);
+            }
+        }
+    }
+
+    private void removePremiumToppingsFromItem(SpecialtyItem item) {
+        if (item.getPremiumToppings().isEmpty()) {
+            ConsoleFormatter.printError("You don't have any premium toppings on your item");
+            promptUserForEnter();
+        }
+
+        ConsoleFormatter.clearScreen();
+        System.out.println("Select topping to remove:\n");
+
+        int premiumCounter = 1;
+        for (PremiumTopping premiumTopping : item.getPremiumToppings()) {
+            ConsoleFormatter.printMenuItem(premiumCounter++, premiumTopping.getName());
+        }
+        ConsoleFormatter.printDivider();
+
+        System.out.println("\nYour choice");
+        int removePremiumToppingChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (removePremiumToppingChoice > 0 && removePremiumToppingChoice <= item.getPremiumToppings().size()) {
+            String premiumToppingRemoved = item.getPremiumToppings().get(removePremiumToppingChoice - 1).getName();
+            item.getPremiumToppings().remove(removePremiumToppingChoice - 1);
+            ConsoleFormatter.printSuccess(premiumToppingRemoved + " removed from item");
+        }
+        promptUserForEnter();
+    }
+
+    private void makeSpecialtyPremiumToppingExtra(SpecialtyItem item) {
+        if (item.getPremiumToppings().isEmpty()) {
+            ConsoleFormatter.printError("No premium toppings available to add extra");
+            promptUserForEnter();
+        }
+
+        ConsoleFormatter.clearScreen();
+        System.out.println("Select topping to make extra: \n");
+
+        int premiumCounter = 1;
+        for (PremiumTopping premiumTopping : item.getPremiumToppings()) {
+            ConsoleFormatter.printMenuItem(premiumCounter++, premiumTopping.getName());
+        }
+        ConsoleFormatter.printDivider();
+
+        System.out.println("Your choice: ");
+        int extraPremiumToppingChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (extraPremiumToppingChoice > 0 && extraPremiumToppingChoice <= item.getPremiumToppings().size()) {
+            item.getPremiumToppings().get(extraPremiumToppingChoice - 1).setExtra(true);
+            ConsoleFormatter.printSuccess(extraPremiumToppingChoice + "made extra");
+        }
+    }
+
+    private void modifyRegularToppings(SpecialtyItem item) {
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("MODIFY REGULAR TOPPINGS");
+        System.out.println();
+
+        System.out.printf("%sCurrent Regular Toppings:%s\n",
+                ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+        if (item.getRegularToppings().isEmpty()) {
+            System.out.println("None");
+        } else {
+            int counter = 1;
+            for (RegularTopping regularTopping : item.getRegularToppings()) {
+                System.out.printf("  %d. %s\n", counter++, regularTopping.getName());
+            }
+        }
+        System.out.println();
+
+        ConsoleFormatter.printMenuItem(1, "Add Regular Topping");
+        ConsoleFormatter.printMenuItem(2, "Remove Regular Topping");
+        ConsoleFormatter.printMenuItem(0, "Go Back");
+        ConsoleFormatter.printDivider();
+
+        System.out.print("\nYour choice: ");
+        int regularToppingChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (regularToppingChoice) {
+            case 1 -> {
+                addRegularToppingsToItem(item);
+            }
+            case 2 -> {
+                removeRegularTopping(item);
+            }
+
+        }
+    }
+
+    private void removeRegularTopping(SpecialtyItem item) {
+        if (item.getRegularToppings().isEmpty()) {
+            ConsoleFormatter.printError("No regular toppings to remove!");
+            promptUserForEnter();
+            return;
+        }
+
+        ConsoleFormatter.clearScreen();
+        System.out.println("Select topping to remove:\n");
+
+        int counter = 1;
+        for (RegularTopping rt : item.getRegularToppings()) {
+            ConsoleFormatter.printMenuItem(counter++, rt.getName());
+        }
+        ConsoleFormatter.printDivider();
+
+        System.out.print("\nYour choice: ");
+        int regularToppingChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (regularToppingChoice > 0 && regularToppingChoice <= item.getRegularToppings().size()) {
+            String removed = item.getRegularToppings().get(regularToppingChoice - 1).getName();
+            item.getRegularToppings().remove(regularToppingChoice - 1);
+            ConsoleFormatter.printSuccess(removed + " removed!");
+        }
+        promptUserForEnter();
+    }
+
+    private void modifySauces(SpecialtyItem item) {
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("MODIFY SAUCES");
+        System.out.println();
+
+        System.out.printf("%sCurrent Sauces:%s\n",
+                ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+        if (item.getSauces().isEmpty()) {
+            System.out.println("None");
+        } else {
+            int counter = 1;
+            for (Sauce sauce : item.getSauces()) {
+                System.out.printf("  %d. %s\n", counter++, sauce.getName());
+            }
+        }
+        System.out.println();
+
+        ConsoleFormatter.printMenuItem(1, "Add Sauce");
+        ConsoleFormatter.printMenuItem(2, "Remove Sauce");
+        ConsoleFormatter.printMenuItem(0, "Go Back");
+        ConsoleFormatter.printDivider();
+
+        System.out.print("\nYour choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
+            case 1 -> {
+                addSauceToItem(item);
+            }
+            case 2 -> {
+                removeSauce(item);
+            }
+        }
+    }
+
+    private void removeSauce(SpecialtyItem item) {
+        if (item.getSauces().isEmpty()) {
+            ConsoleFormatter.printError("No sauces to remove!");
+            promptUserForEnter();
+            return;
+        }
+
+        ConsoleFormatter.clearScreen();
+        System.out.println("Select sauce to remove:\n");
+
+        int counter = 1;
+        for (Sauce sauce : item.getSauces()) {
+            ConsoleFormatter.printMenuItem(counter++, sauce.getName());
+        }
+        ConsoleFormatter.printDivider();
+
+        System.out.print("\nYour choice: ");
+        int sauceChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (sauceChoice > 0 && sauceChoice <= item.getSauces().size()) {
+            String removed = item.getSauces().get(sauceChoice - 1).getName();
+            item.getSauces().remove(sauceChoice - 1);
+            ConsoleFormatter.printSuccess(removed + " removed!");
+        }
+        promptUserForEnter();
+    }
 
     private void checkOutOrder(Order currentOrder) {
         ConsoleFormatter.clearScreen();
