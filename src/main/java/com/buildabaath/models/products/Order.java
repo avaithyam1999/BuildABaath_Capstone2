@@ -10,12 +10,16 @@ public class Order {
     private String orderNumber;
     private ArrayList<Item> items;
     private double totalPrice;
+    private double tipAmount;
+    private double tipPercentage;
     private LocalDateTime orderTime;
 
     public Order() {
         this.orderNumber = generateOrderNumber();
         this.items = new ArrayList<Item>();
         this.totalPrice = 0.0;
+        this.tipAmount = 0.0;
+        this.tipPercentage = 0.0;
         this.orderTime = LocalDateTime.now();
     }
 
@@ -27,7 +31,7 @@ public class Order {
         this.orderNumber = orderID;
     }
 
-    public ArrayList getItems() {
+    public ArrayList<Item> getItems() {
         return items;
     }
 
@@ -41,6 +45,23 @@ public class Order {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public double getTipAmount() {
+        return tipAmount;
+    }
+
+    public void setTipAmount(double percentage) {
+        this.tipPercentage = percentage;
+        this.tipAmount *= (percentage / 100.0);
+    }
+
+    public double getTipPercentage() {
+        return tipPercentage;
+    }
+
+    public void setTipPercentage(double tipPercentage) {
+        this.tipPercentage = tipPercentage;
     }
 
     public LocalDateTime getOrderTime() {
@@ -68,8 +89,7 @@ public class Order {
         }
     }
 
-    public void emptyOrder() {
-        items.clear();
-        totalPrice = 0.0;
+    public double getFinalTotal() {
+        return totalPrice + tipAmount;
     }
 }

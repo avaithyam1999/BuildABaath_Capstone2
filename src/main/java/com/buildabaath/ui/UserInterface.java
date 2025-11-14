@@ -1,5 +1,7 @@
 package com.buildabaath.ui;
 
+import com.buildabaath.models.ReceiptWriter;
+import com.buildabaath.models.abstracts.Item;
 import com.buildabaath.models.products.Drink;
 import com.buildabaath.models.products.MainItem;
 import com.buildabaath.models.products.Order;
@@ -49,7 +51,7 @@ public class UserInterface {
                                 3. Add Drink
                                 4. Add a Side Item
                                 5. Add Dessert
-                                6. View Order Details
+                                6. Check Out
                                 7. Cancel Order
                                 """, currentOrder.getItems().size(), currentOrder.getTotalPrice());
                         int userOrderMenuChoice = scanner.nextInt();
@@ -97,6 +99,10 @@ public class UserInterface {
                                 addPremiumToppingsToItem(item);
                                 addRegularToppingsToItem(item);
                                 addSauceToItem(item);
+
+                                currentOrder.addItem(item);
+                                currentOrder.updateTotalPrice();
+                                System.out.printf("%s %s added to order!", mainSize, itemTypeChoice);
                             }
                             case 3 -> {
                                 addDrinkToOrder(currentOrder);
@@ -105,11 +111,24 @@ public class UserInterface {
                                 addSideToOrder(currentOrder);
                             }
                             case 5 -> {
-//                                viewOrder();
+                                checkOutOrder(currentOrder);
                             }
                             case 6 -> {
-//                                checkout()
-//                                ordering = false;
+                                if (currentOrder.getItems().isEmpty()) {
+                                    System.out.println("Your order is empty. Add an item and then checkout");
+                                } else {
+                                    checkOutOrder(currentOrder);
+
+                                    System.out.println("1. Confirm Order\n2. Cancel");
+                                    int checkOutChoice = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    if (checkOutChoice == 1) {
+                                        ReceiptWriter receiptWriter = new ReceiptWriter(currentOrder);
+                                        receiptWriter.saveReceiptToFile();
+                                        break orderLoop;
+                                    }
+                                }
                             }
                             default -> {
                                 System.out.println("Invalid Option.\n Try again");
@@ -123,6 +142,49 @@ public class UserInterface {
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + mainUserChoice);
             }
+        }
+    }
+
+    private void checkOutOrder(Order currentOrder) {
+        viewOrderSummary(currentOrder);
+
+        System.out.printf("Total: $%.2f\n=================\n", currentOrder.getTotalPrice());
+        System.out.println("Please select a Tip Amount. We are severely underpaid. Please.");
+        System.out.println("1) 15%: " + (currentOrder.getTotalPrice() * .15));
+        System.out.println("2) 20%: " + (currentOrder.getTotalPrice() * .20));
+        System.out.println("3) 25%: " + (currentOrder.getTotalPrice() * .25));
+        System.out.println("4) Custom Amount");
+        System.out.println("5) No Tip >:(");
+        int tipAmountChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (tipAmountChoice) {
+            case 1 -> {
+                currentOrder.setTipAmount(15.00);
+            }
+            case 2 -> {
+                currentOrder.setTipAmount(20.00);
+            }
+            case 3 -> {
+                currentOrder.setTipAmount(25.00);
+            }
+            case 4 -> {
+                System.out.println("Enter Tip Percentage: \n");
+                double customTipAmount = scanner.nextDouble();
+                scanner.nextLine();
+                currentOrder.setTipAmount(customTipAmount);
+            }
+            case 5 -> {
+                currentOrder.setTipAmount(0);
+            }
+        }
+    }
+
+    private void viewOrderSummary(Order currentOrder) {
+        System.out.println("=====Order Details=====");
+        for (Item item : currentOrder.getItems()) {
+            System.out.println(item.getDescription());
+            System.out.printf("Price: $%.2f\n\n", item.calculatePrice());
         }
     }
 
@@ -141,6 +203,7 @@ public class UserInterface {
         if (sideChoice > 0 && sideChoice <= sides.size()) {
             Side side = new Side(sides.get(sideChoice - 1).getName());
             currentOrder.addItem(side);
+            currentOrder.updateTotalPrice();
             System.out.println(sideChoice + "added to order!");
         } else {
             System.out.println("Invalid Side Option.\n");
@@ -209,6 +272,7 @@ public class UserInterface {
 
         Drink drink = new Drink(drinkName, drinkSize);
         currentOrder.addItem(drink);
+        currentOrder.updateTotalPrice();
         System.out.printf("\n%s %s added to order!", drinkSize, drinkName);
     }
 
@@ -216,7 +280,7 @@ public class UserInterface {
         boolean addingSauces = true;
 
         sauceyLoop:while (addingSauces) {
-            System.out.println("=====Add Sauce(ALSO FREE?!?!");
+            System.out.println("=====Add Sauce(ALSO FREE?!?!=====");
             ArrayList<Sauce> sauces = loadSauces();
              int sauceCounter = 1;
             for (Sauce sauce : sauces) {
@@ -240,7 +304,7 @@ public class UserInterface {
     private void addRegularToppingsToItem(MainItem item) {
         boolean addingRegularToppings = true;
         regularToppingLoop: while (addingRegularToppings) {
-            System.out.println("=======Add Regular Toppings(FREE!!)");
+            System.out.println("=======Add Regular Toppings(FREE!!)=======");
             ArrayList<RegularTopping> regularToppings = loadRegularToppings();
 
             int counter = 1;
@@ -278,7 +342,7 @@ public class UserInterface {
             for (PremiumTopping premiumTopping : premiumToppings) {
                 System.out.printf(("%d) %s\n"), premiumToppingCounter++, premiumTopping.getName());
             }
-            System.out.println("9) Done adding Premium Toppings\n0)Skip Premium Toppings");
+            System.out.println("9) Done adding Premium Toppings\n0) Skip Premium Toppings");
 
             int premiumToppingChoice = scanner.nextInt();
             scanner.nextLine();
@@ -296,15 +360,15 @@ public class UserInterface {
                         Large: $.90
                         1. Yes
                         2. No
-                        """, selectedPremiumTopping);
+                        """, selectedPremiumTopping.getName());
                 int extraPremiumSelection = scanner.nextInt();
                 selectedPremiumTopping.setExtra(extraPremiumSelection == 1);
 
                 item.getPremiumToppings().add(selectedPremiumTopping);
                 if (!selectedPremiumTopping.isExtra()) {
-                    System.out.printf("Extra %s Added!", selectedPremiumTopping);
+                    System.out.printf("Extra %s Added!", selectedPremiumTopping.getName());
                 } else {
-                    System.out.printf("%s Added!", selectedPremiumTopping);
+                    System.out.printf("%s Added!", selectedPremiumTopping.getName());
                 }
             }
         }

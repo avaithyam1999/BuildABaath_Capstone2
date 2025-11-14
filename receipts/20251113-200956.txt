@@ -1,0 +1,13 @@
+==Build A Baath Receipt==
+=========================
+Order ID: ORDER NUMBER: 375
+Order Time: 2025-11-13T20:09:56.104120
+
+Paneer Tikka Samosa(Side)Price: $1.50
+
+
+Total: $1.50
+
+
+Thank you for your business
+Please come again!
