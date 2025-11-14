@@ -53,7 +53,7 @@ public class Order {
 
     public void setTipAmount(double percentage) {
         this.tipPercentage = percentage;
-        this.tipAmount *= (percentage / 100.0);
+        this.tipAmount = totalPrice * (percentage / 100.0);
     }
 
     public double getTipPercentage() {

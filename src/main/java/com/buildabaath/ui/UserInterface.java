@@ -1,5 +1,6 @@
 package com.buildabaath.ui;
 
+import com.buildabaath.ConsoleFormatter;
 import com.buildabaath.models.ReceiptWriter;
 import com.buildabaath.models.abstracts.Item;
 import com.buildabaath.models.products.Drink;
@@ -22,18 +23,21 @@ public class UserInterface {
         this.scanner = new Scanner(System.in);
     }
 
-    public void startProgram() {
-        System.out.println("Welcome to Build a Baath! - Your favorite Build your Own Concept!");
+    public void startBuildingThatBaath() {
+        showWelcomeScreen();
 
         boolean mainProgramRunning = true;
         mainLoop:
         while (mainProgramRunning) {
-            System.out.println("""
-                    ==========Build A Baath==========
-                    Please Select an Option:
-                    1. New Order
-                    2. Never mind, I like bland food
-                    """);
+            ConsoleFormatter.clearScreen();
+            ConsoleFormatter.printHeader("BUILD A BAATH - MAIN MENU");
+            System.out.println();
+
+            ConsoleFormatter.printMenuItem(1, "🆕 New Order");
+            ConsoleFormatter.printMenuItem(2, "👋 Never mind, I like bland food");
+            ConsoleFormatter.printDivider();
+
+            System.out.print("\nYour choice: ");
             int mainUserChoice = scanner.nextInt();
             scanner.nextLine();
 
@@ -42,42 +46,82 @@ public class UserInterface {
                     Order currentOrder = new Order();
                     boolean orderRunning = true;
                     orderLoop: while (orderRunning) {
-                        System.out.printf("""
-                                ==========Order Screen==========
-                                Items already in Order: %d
-                                Current Order Total: %.2f
-                                1. Add Main Item
-                                2. Add a Specialty Item
-                                3. Add Drink
-                                4. Add a Side Item
-                                5. Add Dessert
-                                6. Check Out
-                                7. Cancel Order
-                                """, currentOrder.getItems().size(), currentOrder.getTotalPrice());
+                        ConsoleFormatter.clearScreen();
+                        ConsoleFormatter.printHeader("ORDER SCREEN");
+                        System.out.println();
+
+                        System.out.println(ConsoleFormatter.CYAN + "📋 Order Status:" + ConsoleFormatter.RESET);
+                        System.out.printf("   Items in cart: %s%d%s\n",
+                                ConsoleFormatter.BOLD, currentOrder.getItems().size(), ConsoleFormatter.RESET);
+                        System.out.print("   Current total: ");
+                        ConsoleFormatter.printPrice(currentOrder.getTotalPrice());
+                        System.out.println("\n");
+
+                        ConsoleFormatter.printDivider();
+                        ConsoleFormatter.printMenuItem(1, "🍚 Add Main Item");
+                        ConsoleFormatter.printMenuItem(2, "⭐ Add Specialty Item");
+                        ConsoleFormatter.printMenuItem(3, "🥤 Add Drink");
+                        ConsoleFormatter.printMenuItem(4, "🥘 Add Side Item");
+                        ConsoleFormatter.printMenuItem(5, "🍰 Add Dessert");
+                        ConsoleFormatter.printMenuItem(6, "💳 Check Out");
+                        ConsoleFormatter.printMenuItem(7, "❌ Cancel Order");
+                        ConsoleFormatter.printDivider();
+
+                        System.out.print("\nYour choice: ");
                         int userOrderMenuChoice = scanner.nextInt();
                         scanner.nextLine();
 
                         switch (userOrderMenuChoice) {
                             case 1 -> {
-                                System.out.println("=====Select your Main Item=====");
+                                ConsoleFormatter.clearScreen();
+                                ConsoleFormatter.printHeader("SELECT YOUR MAIN ITEM");
+                                System.out.println();
+
                                 ArrayList<MainItemType> types = loadMainItemTypes();
                                 int mainItemCounter = 1;
                                 for (MainItemType itemType : types) {
-                                    System.out.printf("%d) %s (Small: $%.2f, Medium: $%.2f, Large: $%.2f)\n",mainItemCounter++, itemType.getDisplayName(), itemType.getPrice("small"), itemType.getPrice("medium"), itemType.getPrice("large"));
+                                    System.out.printf("%s%d)%s %s\n",
+                                            ConsoleFormatter.BOLD, mainItemCounter++,
+                                            ConsoleFormatter.RESET, itemType.getDisplayName());
+                                    System.out.print("   Small: ");
+                                    ConsoleFormatter.printPrice(itemType.getPrice("small"));
+                                    System.out.print(" | Medium: ");
+                                    ConsoleFormatter.printPrice(itemType.getPrice("medium"));
+                                    System.out.print(" | Large: ");
+                                    ConsoleFormatter.printPrice(itemType.getPrice("large"));
+                                    System.out.println();
                                 }
+                                ConsoleFormatter.printDivider();
 
+                                System.out.print("\nSelect item: ");
                                 int itemTypeChoice = scanner.nextInt();
                                 scanner.nextLine();
 
                                 if (itemTypeChoice < 1 || itemTypeChoice > types.size()) {
-                                    System.out.println("That is an invalid entry.\n");
+                                    ConsoleFormatter.printError("That is an invalid entry.\n");
+                                    promptUserForEnter();
                                     return;
                                 }
 
                                 MainItemType selectedType = types.get(itemTypeChoice - 1);
-                                System.out.println(itemTypeChoice + "selected.\n Which size would you like?\n1. Small\n2. Medium\n3. Large\n");
+                                ConsoleFormatter.clearScreen();
+                                ConsoleFormatter.printHeader("SELECT SIZE");
+                                System.out.println();
+
+                                System.out.printf("%sSelected: %s%s\n\n",
+                                        ConsoleFormatter.CYAN, selectedType.getDisplayName(),
+                                        ConsoleFormatter.RESET);
+
+                                ConsoleFormatter.printMenuItem(1, "Small", selectedType.getPrice("small"));
+                                ConsoleFormatter.printMenuItem(2, "Medium", selectedType.getPrice("medium"));
+                                ConsoleFormatter.printMenuItem(3, "Large", selectedType.getPrice("large"));
+                                ConsoleFormatter.printDivider();
+
+                                System.out.print("\nYour choice: ");
+
                                 int sizeChoice = scanner.nextInt();
                                 scanner.nextLine();
+
                                 String mainSize = "";
                                 switch (sizeChoice) {
                                     case 1 -> {
@@ -90,7 +134,8 @@ public class UserInterface {
                                         mainSize = "large";
                                     }
                                     default -> {
-                                        System.out.println("Invalid size choice");
+                                        ConsoleFormatter.printError("Invalid size choice. Try again");
+                                        promptUserForEnter();
                                     }
                                 };
                                 MainItem item = new MainItem(selectedType, mainSize);
@@ -99,10 +144,22 @@ public class UserInterface {
                                 addPremiumToppingsToItem(item);
                                 addRegularToppingsToItem(item);
                                 addSauceToItem(item);
+                                ConsoleFormatter.printBox("""
+                                =====Special Order??=====
+                                Would you like your order to be baked and served in a tandoori clay pot(+$2.00)?
+                                1. Yes
+                                2. No
+                                """);
+                                int specializedChoice = scanner.nextInt();
+                                scanner.nextLine();
 
                                 currentOrder.addItem(item);
                                 currentOrder.updateTotalPrice();
-                                System.out.printf("%s %s added to order!", mainSize, itemTypeChoice);
+                                ConsoleFormatter.printSuccess(String.format("%s %s added to order!", mainSize, selectedType.getDisplayName()));
+                                promptUserForEnter();
+                            }
+                            case 2 -> {
+//                                addSpecialtyItemToOrder();
                             }
                             case 3 -> {
                                 addDrinkToOrder(currentOrder);
@@ -111,11 +168,12 @@ public class UserInterface {
                                 addSideToOrder(currentOrder);
                             }
                             case 5 -> {
-                                checkOutOrder(currentOrder);
+                                viewOrderSummary(currentOrder);
                             }
                             case 6 -> {
                                 if (currentOrder.getItems().isEmpty()) {
-                                    System.out.println("Your order is empty. Add an item and then checkout");
+                                    ConsoleFormatter.printWarning("Your order is empty. Add an item and then checkout");
+                                    promptUserForEnter();
                                 } else {
                                     checkOutOrder(currentOrder);
 
@@ -129,6 +187,10 @@ public class UserInterface {
                                         break orderLoop;
                                     }
                                 }
+                            }
+                            case 7 -> {
+                                System.out.println("Order Cancelled. ");
+                                break orderLoop;
                             }
                             default -> {
                                 System.out.println("Invalid Option.\n Try again");
@@ -145,16 +207,49 @@ public class UserInterface {
         }
     }
 
+    private void showWelcomeScreen() {
+        ConsoleFormatter.clearScreen();
+        System.out.println("""
+                ▗▄▄▖ ▗▖ ▗▖▗▄▄▄▖▗▖   ▗▄▄▄      ▗▄▖     ▗▄▄▖  ▗▄▖  ▗▄▖▗▄▄▄▖▗▖ ▗▖
+                ▐▌ ▐▌▐▌ ▐▌  █  ▐▌   ▐▌  █    ▐▌ ▐▌    ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▐▌ ▐▌
+                ▐▛▀▚▖▐▌ ▐▌  █  ▐▌   ▐▌  █    ▐▛▀▜▌    ▐▛▀▚▖▐▛▀▜▌▐▛▀▜▌ █  ▐▛▀▜▌
+                ▐▙▄▞▘▝▚▄▞▘▗▄█▄▖▐▙▄▄▖▐▙▄▄▀    ▐▌ ▐▌    ▐▙▄▞▘▐▌ ▐▌▐▌ ▐▌ █  ▐▌ ▐▌
+                """);
+        ConsoleFormatter.printBox("""
+                🍛 Welcome to Build a Baath! 🍛
+                Your favorite Build-Your-Own Indian Concept!
+                """);
+
+        promptUserForEnter();
+    }
+
+    private void promptUserForEnter() {
+        System.out.printf("\n%s Press Enter to Continue.....%s\n", ConsoleFormatter.CYAN, ConsoleFormatter.RESET);
+        scanner.nextLine();
+    }
+
+
     private void checkOutOrder(Order currentOrder) {
+        ConsoleFormatter.clearScreen();
         viewOrderSummary(currentOrder);
 
-        System.out.printf("Total: $%.2f\n=================\n", currentOrder.getTotalPrice());
-        System.out.println("Please select a Tip Amount. We are severely underpaid. Please.");
-        System.out.println("1) 15%: " + (currentOrder.getTotalPrice() * .15));
-        System.out.println("2) 20%: " + (currentOrder.getTotalPrice() * .20));
-        System.out.println("3) 25%: " + (currentOrder.getTotalPrice() * .25));
-        System.out.println("4) Custom Amount");
-        System.out.println("5) No Tip >:(");
+        System.out.printf("\nSubtotal (%s%%.0f%%%s): ", ConsoleFormatter.RESET, currentOrder.getTipPercentage(), ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(currentOrder.getTotalPrice());
+        System.out.println();
+        ConsoleFormatter.printDivider();
+
+        System.out.printf("\n%s💰 Please select a Tip Amount%s\n", ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+        System.out.printf("%sWe are severely underpaid. Please.%s\n", ConsoleFormatter.CYAN, ConsoleFormatter.RESET);
+        System.out.println();
+
+        ConsoleFormatter.printMenuItem(1, "15%", currentOrder.getTotalPrice() * .15);
+        ConsoleFormatter.printMenuItem(2, "20%", currentOrder.getTotalPrice() * .20);
+        ConsoleFormatter.printMenuItem(3, "25%", currentOrder.getTotalPrice() * .25);
+        ConsoleFormatter.printMenuItem(4, "Custom Amount", 0.0);
+        ConsoleFormatter.printMenuItem(5, "No Tip >:(", 0.0);
+        ConsoleFormatter.printDivider();
+
+        System.out.print("\nYour choice: ");
         int tipAmountChoice = scanner.nextInt();
         scanner.nextLine();
 

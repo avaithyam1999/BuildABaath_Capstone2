@@ -23,8 +23,9 @@ public class ReceiptWriter {
         return order.getOrderTime().format(formatter);
     }
 
-    private String generateFileName() {
+    private String generateReceiptFile() {
         ArrayList<Item> items = order.getItems();
+        DateTimeFormatter receiptFormatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm a");
         String itemList = "";
 
         for (Item item : items) {
@@ -35,7 +36,7 @@ public class ReceiptWriter {
         String receipt = String.format("""
                 ==Build A Baath Receipt==
                 =========================
-                Order ID: %s
+                %s
                 Order Time: %s
                 
                 %s
@@ -49,14 +50,14 @@ public class ReceiptWriter {
                 
                 Thank you for your business
                 Please come again!
-                """, order.getOrderID(), order.getOrderTime(), itemList, order.getTotalPrice(), order.getTipAmount());
+                """, order.getOrderID(), order.getOrderTime().format(receiptFormatter), itemList, order.getTotalPrice(), order.getTipAmount());
         return receipt;
     }
 
     public void saveReceiptToFile() {
         try {
             BufferedWriter buffWriter = new BufferedWriter(new FileWriter("receipts/" + fileName));
-            buffWriter.write(generateFileName());
+            buffWriter.write(generateReceiptFile());
             buffWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);

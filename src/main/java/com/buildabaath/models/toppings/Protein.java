@@ -20,6 +20,54 @@ public class Protein extends Topping {
         this.extraToppingForLarge = 1.50;
     }
 
+    public double getSmallPrice() {
+        return smallPrice;
+    }
+
+    public void setSmallPrice(double smallPrice) {
+        this.smallPrice = smallPrice;
+    }
+
+    public double getMediumPrice() {
+        return mediumPrice;
+    }
+
+    public void setMediumPrice(double mediumPrice) {
+        this.mediumPrice = mediumPrice;
+    }
+
+    public double getLargePrice() {
+        return largePrice;
+    }
+
+    public void setLargePrice(double largePrice) {
+        this.largePrice = largePrice;
+    }
+
+    public double getExtraToppingForSmall() {
+        return extraToppingForSmall;
+    }
+
+    public void setExtraToppingForSmall(double extraToppingForSmall) {
+        this.extraToppingForSmall = extraToppingForSmall;
+    }
+
+    public double getExtraToppingForMedium() {
+        return extraToppingForMedium;
+    }
+
+    public void setExtraToppingForMedium(double extraToppingForMedium) {
+        this.extraToppingForMedium = extraToppingForMedium;
+    }
+
+    public double getExtraToppingForLarge() {
+        return extraToppingForLarge;
+    }
+
+    public void setExtraToppingForLarge(double extraToppingForLarge) {
+        this.extraToppingForLarge = extraToppingForLarge;
+    }
+
     @Override
     public double getPrice(String size) {
         double price = 0.0;
