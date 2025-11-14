@@ -1,8 +1,6 @@
 package com.buildabaath.models.products;
 
-import com.buildabaath.interfaces.Customizable;
 import com.buildabaath.models.abstracts.Item;
-import com.buildabaath.models.abstracts.Topping;
 import com.buildabaath.models.properties.MainItemType;
 import com.buildabaath.models.toppings.PremiumTopping;
 import com.buildabaath.models.toppings.Protein;
@@ -10,9 +8,8 @@ import com.buildabaath.models.toppings.RegularTopping;
 import com.buildabaath.models.toppings.Sauce;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainItem extends Item implements Customizable {
+public class MainItem extends Item {
     private MainItemType type;
     private String size;
     private Protein protein;
@@ -133,8 +130,5 @@ public class MainItem extends Item implements Customizable {
         return description;
     }
 
-    @Override
-    public void customize() {
-    }
 }
 
