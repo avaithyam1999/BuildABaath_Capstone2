@@ -23,8 +23,7 @@ public class UserInterface {
         showWelcomeScreen();
 
         boolean mainProgramRunning = true;
-        mainLoop:
-        while (mainProgramRunning) {
+        mainLoop: while (mainProgramRunning) {
             ConsoleFormatter.clearScreen();
             ConsoleFormatter.printHeader("BUILD A BAATH - MAIN MENU");
             System.out.println();
@@ -384,7 +383,7 @@ public class UserInterface {
             System.out.println();
 
             ConsoleFormatter.printDivider();
-            ConsoleFormatter.printMenuItem(1, "🥩 Modify Protein");
+            ConsoleFormatter.printMenuItem(1, "🍗 Modify Protein");
             ConsoleFormatter.printMenuItem(2, "⭐ Add/Remove Premium Toppings");
             ConsoleFormatter.printMenuItem(3, "🥗 Add/Remove Regular Toppings");
             ConsoleFormatter.printMenuItem(4, "🍛 Add/Remove Sauces");
