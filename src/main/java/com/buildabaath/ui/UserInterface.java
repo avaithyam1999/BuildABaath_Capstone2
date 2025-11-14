@@ -1,11 +1,9 @@
 package com.buildabaath.ui;
 
 import com.buildabaath.ConsoleFormatter;
+import com.buildabaath.models.ReceiptWriter;
 import com.buildabaath.models.abstracts.Item;
-import com.buildabaath.models.products.Drink;
-import com.buildabaath.models.products.MainItem;
-import com.buildabaath.models.products.Order;
-import com.buildabaath.models.products.Side;
+import com.buildabaath.models.products.*;
 import com.buildabaath.models.properties.MainItemType;
 import com.buildabaath.models.toppings.PremiumTopping;
 import com.buildabaath.models.toppings.Protein;
@@ -158,7 +156,7 @@ public class UserInterface {
                                 promptUserForEnter();
                             }
                             case 2 -> {
-//                                addSpecialtyItemToOrder();
+
                             }
                             case 3 -> {
                                 addDrinkToOrder(currentOrder);
@@ -167,7 +165,7 @@ public class UserInterface {
                                 addSideToOrder(currentOrder);
                             }
                             case 5 -> {
-                                viewOrderSummary(currentOrder);
+                                addDessertToOrder(currentOrder);
                             }
                             case 6 -> {
                                 if (currentOrder.getItems().isEmpty()) {
@@ -187,6 +185,8 @@ public class UserInterface {
                                     scanner.nextLine();
 
                                     if (checkOutChoice == 1) {
+                                        ReceiptWriter receiptWriter = new ReceiptWriter(currentOrder);
+                                        receiptWriter.saveReceiptToFile();
                                         ConsoleFormatter.printBox("Thank you for your order! You can find your receipt in the folder\nPlease come again! 🙏");
                                         break mainLoop;
                                     }
@@ -315,6 +315,76 @@ public class UserInterface {
             ConsoleFormatter.printPrice(item.calculatePrice());
             System.out.println();
         }
+    }
+
+    private void addDessertToOrder(Order currentOrder) {
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("SELECT A DESSERT");
+        System.out.println();
+
+        ConsoleFormatter.printMenuItem(1, "Ras Malai");
+        ConsoleFormatter.printMenuItem(2, "Gulab Jamun");
+        ConsoleFormatter.printMenuItem(3, "Jalebi");
+        ConsoleFormatter.printMenuItem(4, "Kaju Katli");
+        ConsoleFormatter.printDivider();
+
+        System.out.println("\nYour choice: ");
+        int dessertChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        String dessertName = "";
+        switch (dessertChoice) {
+            case 1 -> {
+                dessertName = "Ras Malai";
+            }
+            case 2 -> {
+                dessertName = "Gulab Jamun";
+            }
+            case 3 -> {
+                dessertName = "Jalebi";
+            }
+            case 4 -> {
+                dessertName = "Kaju Katli";
+            }
+            default -> {
+                ConsoleFormatter.printError("You've entered the wrong dessert");
+            }
+        }
+
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("SELECT SIZE");
+        System.out.println();
+        System.out.printf("%sSelected: %s%s\n\n", ConsoleFormatter.CYAN, dessertName, ConsoleFormatter.RESET);
+
+        ConsoleFormatter.printMenuItem(1, "Small", 2.50);
+        ConsoleFormatter.printMenuItem(2, "Medium", 4.00);
+        ConsoleFormatter.printMenuItem(3, "Large", 5.50);
+        ConsoleFormatter.printDivider();
+
+        System.out.println("\nYour choice: ");
+        int sizeChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        String dessertSize = "";
+        switch (sizeChoice) {
+            case 1 -> {
+                dessertSize = "small";
+            }
+            case 2 -> {
+                dessertSize = "medium";
+            }
+            case 3 -> {
+                dessertSize = "large";
+            }
+            default -> {
+                ConsoleFormatter.printError("You've entered an invalid option");
+            }
+        }
+        Dessert dessert = new Dessert(dessertName, dessertSize);
+        currentOrder.addItem(dessert);
+        currentOrder.updateTotalPrice();
+        ConsoleFormatter.printSuccess(String.format("%s %s added to order!", dessertSize, dessertName));
+        promptUserForEnter();
     }
 
     private void addSideToOrder(Order currentOrder) {
@@ -544,7 +614,7 @@ public class UserInterface {
                 selectedPremiumTopping.setExtra(extraPremiumSelection == 1);
                 item.getPremiumToppings().add(selectedPremiumTopping);
 
-                if (!selectedPremiumTopping.isExtra()) {
+                if (selectedPremiumTopping.isExtra()) {
                     ConsoleFormatter.printSuccess(String.format("Extra %s Added!", selectedPremiumTopping.getName()));
                 } else {
                     ConsoleFormatter.printSuccess(String.format("%s Added!", selectedPremiumTopping.getName()));
@@ -672,25 +742,4 @@ public class UserInterface {
         sides.add(new Side("Paneer Tikka Samosa"));
         return sides;
     }
-
-    private ArrayList<Drink> loadDrinks() {
-        ArrayList<Drink> drinks = new ArrayList<>();
-        drinks.add(new Drink("Filter Coffee", "small"));
-        drinks.add(new Drink("Filter Coffee", "medium"));
-        drinks.add(new Drink("Filter Coffee", "large"));
-        drinks.add(new Drink("Masala Tea", "small"));
-        drinks.add(new Drink("Masala Tea", "medium"));
-        drinks.add(new Drink("Masala Tea", "large"));
-        drinks.add(new Drink("Badam Milk", "small"));
-        drinks.add(new Drink("Badam Milk", "medium"));
-        drinks.add(new Drink("Badam Milk", "large"));
-        drinks.add(new Drink("Thums Up", "small"));
-        drinks.add(new Drink("Thums Up", "medium"));
-        drinks.add(new Drink("Thums Up", "large"));
-        drinks.add(new Drink("Maaza", "small"));
-        drinks.add(new Drink("Maaza", "medium"));
-        drinks.add(new Drink("Maaza", "large"));
-        return drinks;
-    }
-
 }
