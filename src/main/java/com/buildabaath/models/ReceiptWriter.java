@@ -39,12 +39,13 @@ public class ReceiptWriter {
                 Order Time: %s
                 
                 %s
-                Total: $%.2f
                 
+                Total: $%.2f
+                Tip Amount: %.2f
                 
                 Thank you for your business
                 Please come again!
-                """, order.getOrderID(), order.getOrderTime(), itemList, order.getTotalPrice());
+                """, order.getOrderID(), order.getOrderTime(), itemList, order.getTotalPrice(), order.getTipAmount());
         return receipt;
     }
 
