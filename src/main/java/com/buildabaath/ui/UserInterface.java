@@ -1,7 +1,6 @@
 package com.buildabaath.ui;
 
 import com.buildabaath.ConsoleFormatter;
-import com.buildabaath.models.ReceiptWriter;
 import com.buildabaath.models.abstracts.Item;
 import com.buildabaath.models.products.Drink;
 import com.buildabaath.models.products.MainItem;
@@ -50,7 +49,7 @@ public class UserInterface {
                         ConsoleFormatter.printHeader("ORDER SCREEN");
                         System.out.println();
 
-                        System.out.println(ConsoleFormatter.CYAN + "📋 Order Status:" + ConsoleFormatter.RESET);
+                        System.out.println(ConsoleFormatter.THANOS + "📋 Order Status:" + ConsoleFormatter.RESET);
                         System.out.printf("   Items in cart: %s%d%s\n",
                                 ConsoleFormatter.BOLD, currentOrder.getItems().size(), ConsoleFormatter.RESET);
                         System.out.print("   Current total: ");
@@ -109,7 +108,7 @@ public class UserInterface {
                                 System.out.println();
 
                                 System.out.printf("%sSelected: %s%s\n\n",
-                                        ConsoleFormatter.CYAN, selectedType.getDisplayName(),
+                                        ConsoleFormatter.THANOS, selectedType.getDisplayName(),
                                         ConsoleFormatter.RESET);
 
                                 ConsoleFormatter.printMenuItem(1, "Small", selectedType.getPrice("small"));
@@ -177,32 +176,41 @@ public class UserInterface {
                                 } else {
                                     checkOutOrder(currentOrder);
 
-                                    System.out.println("1. Confirm Order\n2. Cancel");
+                                    System.out.printf("\n%sConfirm your order?%s\n", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+                                    ConsoleFormatter.printBox(String.format("Order Total: $%.2f", currentOrder.getFinalTotal()));
+                                    ConsoleFormatter.printMenuItem(1, "✓ Confirm Order");
+                                    ConsoleFormatter.printMenuItem(2, "✗ Go Back");
+                                    ConsoleFormatter.printDivider();
+
+                                    System.out.print("\nYour choice: ");
                                     int checkOutChoice = scanner.nextInt();
                                     scanner.nextLine();
 
                                     if (checkOutChoice == 1) {
-                                        ReceiptWriter receiptWriter = new ReceiptWriter(currentOrder);
-                                        receiptWriter.saveReceiptToFile();
-                                        break orderLoop;
+                                        ConsoleFormatter.printBox("Thank you for your order! You can find your receipt in the folder\nPlease come again! 🙏");
+                                        break mainLoop;
                                     }
                                 }
                             }
                             case 7 -> {
-                                System.out.println("Order Cancelled. ");
+                                ConsoleFormatter.printBox("Order Cancelled. Lame.");
                                 break orderLoop;
                             }
                             default -> {
-                                System.out.println("Invalid Option.\n Try again");
+                                ConsoleFormatter.printBox("Invalid Option.\n Try again");
+                                promptUserForEnter();
                             }
                         }
                     }
                 }
                 case 2 -> {
-                    System.out.println("Thanks for visiting Build a Baath and have a tasty day");
+                    ConsoleFormatter.clearScreen();
+                    ConsoleFormatter.printBox("Thanks for visiting Build a Baath and have a tasty day");
                     break mainLoop;
                 }
-                default -> throw new IllegalStateException("Unexpected value: " + mainUserChoice);
+                default -> {
+                    ConsoleFormatter.printError(String.format("Unexpected Value: %d", mainUserChoice));
+                }
             }
         }
     }
@@ -224,7 +232,7 @@ public class UserInterface {
     }
 
     private void promptUserForEnter() {
-        System.out.printf("\n%s Press Enter to Continue.....%s\n", ConsoleFormatter.CYAN, ConsoleFormatter.RESET);
+        System.out.printf("\n%s Press Enter to Continue.....%s\n", ConsoleFormatter.THANOS, ConsoleFormatter.RESET);
         scanner.nextLine();
     }
 
@@ -233,7 +241,7 @@ public class UserInterface {
         ConsoleFormatter.clearScreen();
         viewOrderSummary(currentOrder);
 
-        System.out.printf("\nSubtotal (%s%%.0f%%%s): ", ConsoleFormatter.RESET, currentOrder.getTipPercentage(), ConsoleFormatter.RESET);
+        System.out.print("\nSubtotal: ");
         ConsoleFormatter.printPrice(currentOrder.getTotalPrice());
         System.out.println();
         ConsoleFormatter.printDivider();
@@ -242,11 +250,20 @@ public class UserInterface {
         System.out.printf("%sWe are severely underpaid. Please.%s\n", ConsoleFormatter.CYAN, ConsoleFormatter.RESET);
         System.out.println();
 
-        ConsoleFormatter.printMenuItem(1, "15%", currentOrder.getTotalPrice() * .15);
-        ConsoleFormatter.printMenuItem(2, "20%", currentOrder.getTotalPrice() * .20);
-        ConsoleFormatter.printMenuItem(3, "25%", currentOrder.getTotalPrice() * .25);
-        ConsoleFormatter.printMenuItem(4, "Custom Amount", 0.0);
-        ConsoleFormatter.printMenuItem(5, "No Tip >:(", 0.0);
+        System.out.printf("%s1)%s 15%% - ", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(currentOrder.getTotalPrice() * 0.15);
+        System.out.println();
+
+        System.out.printf("%s2)%s 20%% - ", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(currentOrder.getTotalPrice() * 0.20);
+        System.out.println();
+
+        System.out.printf("%s3)%s 25%% - ", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(currentOrder.getTotalPrice() * 0.25);
+        System.out.println();
+
+        System.out.printf("%s4)%s Custom Percentage \n", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        System.out.printf("%s5)%s No Tip >:O \n", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
         ConsoleFormatter.printDivider();
 
         System.out.print("\nYour choice: ");
@@ -273,25 +290,48 @@ public class UserInterface {
                 currentOrder.setTipAmount(0);
             }
         }
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("FINAL ORDER SUMMARY");
+        System.out.println();
+        viewOrderSummary(currentOrder);
+
+        System.out.print("\nSubtotal: ");
+        ConsoleFormatter.printPrice(currentOrder.getTotalPrice());
+        System.out.printf("\nTip (%.0f%%): ", currentOrder.getTipPercentage());
+        ConsoleFormatter.printPrice(currentOrder.getTipAmount());
+        System.out.println();
+        ConsoleFormatter.printDivider();
+        System.out.printf("%sTOTAL: %s", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(currentOrder.getFinalTotal());
+        System.out.println("\n");
     }
 
     private void viewOrderSummary(Order currentOrder) {
-        System.out.println("=====Order Details=====");
+        int itemNumber = 1;
         for (Item item : currentOrder.getItems()) {
+            System.out.printf("%sItem #%d%s\n", ConsoleFormatter.BOLD, itemNumber++, ConsoleFormatter.RESET);
             System.out.println(item.getDescription());
-            System.out.printf("Price: $%.2f\n\n", item.calculatePrice());
+            System.out.print("Price: ");
+            ConsoleFormatter.printPrice(item.calculatePrice());
+
         }
     }
 
     private void addSideToOrder(Order currentOrder) {
-        System.out.println("====Select a Side====");
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("SELECT A SIDE");
+
         ArrayList<Side> sides = loadSides();
 
         int sideCounter = 1;
         for (Side side : sides) {
-            System.out.printf("%d) %s - $1.50\n", sideCounter++, side.getName());
+            System.out.printf("%s%d)%s %-30s \n", ConsoleFormatter.BOLD, sideCounter++, ConsoleFormatter.RESET, side.getName());
+            ConsoleFormatter.printPrice(1.50);
+            System.out.println();
         }
+        ConsoleFormatter.printDivider();
 
+        System.out.println("\nYour Choice: ");
         int sideChoice = scanner.nextInt();
         scanner.nextLine();
 
@@ -299,21 +339,25 @@ public class UserInterface {
             Side side = new Side(sides.get(sideChoice - 1).getName());
             currentOrder.addItem(side);
             currentOrder.updateTotalPrice();
-            System.out.println(sideChoice + "added to order!");
+            ConsoleFormatter.printSuccess(String.format("%s added to order!", side.getName()));
         } else {
-            System.out.println("Invalid Side Option.\n");
+            ConsoleFormatter.printError("You entered an invalid side choice");
         }
     }
 
     private void addDrinkToOrder(Order currentOrder) {
-        System.out.println("""
-                ====Select a Drink====
-                1. Filter Coffee
-                2. Masala Tea
-                3. Badam Milk
-                4. Thums Up
-                5. Maaza
-                """);
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("SELECT A DRINK");
+        System.out.println();
+
+        ConsoleFormatter.printMenuItem(1, "☕ Filter Coffee");
+        ConsoleFormatter.printMenuItem(2, "🍵 Masala Tea");
+        ConsoleFormatter.printMenuItem(3, "🥛 Badam Milk");
+        ConsoleFormatter.printMenuItem(4, "🥤 Thums Up");
+        ConsoleFormatter.printMenuItem(5, "🍊 Maaza");
+        ConsoleFormatter.printDivider();
+
+        System.out.println("\nYour choice: ");
         int drinkChoice = scanner.nextInt();
         scanner.nextLine();
 
@@ -335,16 +379,30 @@ public class UserInterface {
                 drinkName = "Maaza";
             }
             default -> {
-                System.out.println("Invalid drink choice");
+                ConsoleFormatter.printError("You entered an invalid drink choice");
             }
         }
 
-        System.out.println("""
-                What size?
-                1. Small - $2.00
-                2. Medium - $2.50
-                3. Large - $3.00
-                """);
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("SELECT SIZE");
+        System.out.println();
+        System.out.printf("%sSelected: %s%s\n\n", ConsoleFormatter.CYAN, drinkName, ConsoleFormatter.RESET);
+
+        System.out.printf("%s1)%s Small - ", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(3.00);
+        System.out.println();
+
+        System.out.printf("%s2)%s Medium - ", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(3.75);
+        System.out.println();
+
+        System.out.printf("%s3)%s Large - ", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+        ConsoleFormatter.printPrice(4.20);
+        System.out.println();
+
+        ConsoleFormatter.printDivider();
+
+        System.out.println("\nYour choice: ");
         int sizeChoice = scanner.nextInt();
         scanner.nextLine();
 
@@ -360,29 +418,32 @@ public class UserInterface {
                 drinkSize = "large";
             }
             default -> {
-                System.out.println("invalid choice");
+                ConsoleFormatter.printError("invalid choice");
             }
         }
-        ;
-
         Drink drink = new Drink(drinkName, drinkSize);
         currentOrder.addItem(drink);
         currentOrder.updateTotalPrice();
-        System.out.printf("\n%s %s added to order!", drinkSize, drinkName);
+        ConsoleFormatter.printSuccess(String.format("%s %s added to order", drinkSize, drinkName));
     }
 
     private void addSauceToItem(MainItem item) {
         boolean addingSauces = true;
 
         sauceyLoop:while (addingSauces) {
-            System.out.println("=====Add Sauce(ALSO FREE?!?!=====");
-            ArrayList<Sauce> sauces = loadSauces();
-             int sauceCounter = 1;
-            for (Sauce sauce : sauces) {
-                System.out.printf("%d) %s\n", sauceCounter++, sauce.getName());
-            }
-            System.out.println("0) Done adding sauces");
+            ConsoleFormatter.clearScreen();
+            ConsoleFormatter.printHeader("ADD SAUCE (ALSO FREE!?!?)");
+            System.out.println();
 
+            ArrayList<Sauce> sauces = loadSauces();
+            int sauceCounter = 1;
+            for (Sauce sauce : sauces) {
+                ConsoleFormatter.printMenuItem(sauceCounter++, sauce.getName());
+            }
+            ConsoleFormatter.printMenuItem(0, "✓ Done adding sauces");
+            ConsoleFormatter.printDivider();
+
+            System.out.println("\nYour choice: ");
             int sauceChoice = scanner.nextInt();
             scanner.nextLine();
 
@@ -391,7 +452,11 @@ public class UserInterface {
             } else if (sauceChoice > 0 && sauceChoice <= sauces.size()) {
                 Sauce selectedSauce = new Sauce(sauces.get(sauceChoice - 1).getName());
                 item.getSauces().add(selectedSauce);
-                System.out.println(selectedSauce + "added!");
+                ConsoleFormatter.printSuccess(String.format("%s added!", selectedSauce.getName()));
+                promptUserForEnter();
+            } else {
+                ConsoleFormatter.printError("Invalid Sauce, boss");
+                promptUserForEnter();
             }
         }
     }
@@ -399,14 +464,18 @@ public class UserInterface {
     private void addRegularToppingsToItem(MainItem item) {
         boolean addingRegularToppings = true;
         regularToppingLoop: while (addingRegularToppings) {
-            System.out.println("=======Add Regular Toppings(FREE!!)=======");
+            ConsoleFormatter.clearScreen();
+            ConsoleFormatter.printHeader("ADD REGULAR TOPPINGS (FREE!)");
+            System.out.println();
+
             ArrayList<RegularTopping> regularToppings = loadRegularToppings();
 
             int counter = 1;
             for (RegularTopping regularTopping : regularToppings) {
-                System.out.printf("%d) %s\n", counter++, regularTopping.getName());
+                ConsoleFormatter.printMenuItem(counter++, regularTopping.getName());
             }
-            System.out.println("0) Done adding regular toppings");
+            ConsoleFormatter.printMenuItem(0, "✓ Done adding regular toppings");
+            ConsoleFormatter.printDivider();
 
             int regularToppingChoice = scanner.nextInt();
             scanner.nextLine();
@@ -416,7 +485,11 @@ public class UserInterface {
             } else if (regularToppingChoice > 0 && regularToppingChoice <= regularToppings.size()) {
                 RegularTopping selectedRegularTopping = new RegularTopping(regularToppings.get(regularToppingChoice - 1).getName());
                 item.getRegularToppings().add(selectedRegularTopping);
-                System.out.println("Added!");
+                ConsoleFormatter.printSuccess("Added!");
+                promptUserForEnter();
+            } else {
+                ConsoleFormatter.printError("Invalid choice");
+                promptUserForEnter();
             }
         }
     }
@@ -424,21 +497,27 @@ public class UserInterface {
     private void addPremiumToppingsToItem(MainItem item) {
         boolean addingToppings = true;
         toppingLoop: while (addingToppings) {
-            System.out.println("""
-        ======Add Premium Toppings=====
-        Premium Topping Pricing:
-        Small: $.75 ($.30 - Extra)
-        Medium: $1.50 ($.60 - Extra)
-        Large: $2.25 ($.90 - Extra)
-        """);
+            ConsoleFormatter.clearScreen();
+            ConsoleFormatter.printHeader("ADD PREMIUM TOPPINGS");
+            System.out.println();
+
+            System.out.printf("%sPremium Topping Pricing:%s\n", ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+            System.out.println("  Small: $0.75 ($0.30 - Extra)");
+            System.out.println("  Medium: $1.50 ($0.60 - Extra)");
+            System.out.println("  Large: $2.25 ($0.90 - Extra)");
+            System.out.println();
+
             ArrayList<PremiumTopping> premiumToppings = loadPremiumToppings();
 
             int premiumToppingCounter = 1;
             for (PremiumTopping premiumTopping : premiumToppings) {
-                System.out.printf(("%d) %s\n"), premiumToppingCounter++, premiumTopping.getName());
+                ConsoleFormatter.printMenuItem(premiumToppingCounter++, premiumTopping.getName());
             }
-            System.out.println("9) Done adding Premium Toppings\n0) Skip Premium Toppings");
+            ConsoleFormatter.printMenuItem(9, "✓ Done adding Premium Toppings");
+            ConsoleFormatter.printMenuItem(0, "⏭ Skip Premium Toppings");
+            ConsoleFormatter.printDivider();
 
+            System.out.println("\nYour choice: ");
             int premiumToppingChoice = scanner.nextInt();
             scanner.nextLine();
 
@@ -447,50 +526,89 @@ public class UserInterface {
             } else if (premiumToppingChoice > 0 && premiumToppingChoice <= premiumToppings.size()) {
                 PremiumTopping selectedPremiumTopping = new PremiumTopping(premiumToppings.get(premiumToppingChoice - 1).getName());
 
-                System.out.printf("""
-                        Would you like extra %s?
-                        Extra Premium Topping Pricing:
-                        Small: $.30
-                        Medium: $.60
-                        Large: $.90
-                        1. Yes
-                        2. No
-                        """, selectedPremiumTopping.getName());
+                ConsoleFormatter.clearScreen();
+                System.out.printf("%sWould you like extra %s?%s\n\n",
+                        ConsoleFormatter.BOLD, selectedPremiumTopping.getName(), ConsoleFormatter.RESET);
+                System.out.printf("%sExtra Premium Topping Pricing:%s\n", ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+                System.out.println("  Small: $0.30");
+                System.out.println("  Medium: $0.60");
+                System.out.println("  Large: $0.90");
+                System.out.println();
+
+                ConsoleFormatter.printMenuItem(1, "Yes");
+                ConsoleFormatter.printMenuItem(2, "No");
+                ConsoleFormatter.printDivider();
+
+                System.out.print("\nYour choice: ");
                 int extraPremiumSelection = scanner.nextInt();
                 selectedPremiumTopping.setExtra(extraPremiumSelection == 1);
-
                 item.getPremiumToppings().add(selectedPremiumTopping);
+
                 if (!selectedPremiumTopping.isExtra()) {
-                    System.out.printf("Extra %s Added!", selectedPremiumTopping.getName());
+                    ConsoleFormatter.printSuccess(String.format("Extra %s Added!", selectedPremiumTopping.getName()));
                 } else {
-                    System.out.printf("%s Added!", selectedPremiumTopping.getName());
+                    ConsoleFormatter.printSuccess(String.format("%s Added!", selectedPremiumTopping.getName()));
                 }
+                promptUserForEnter();
+            } else {
+                ConsoleFormatter.printError("Invalid choice");
+                promptUserForEnter();
             }
         }
     }
 
     private void addProteinToItem(MainItem item) {
-        System.out.println("=====Select your Protein=====");
+        ConsoleFormatter.clearScreen();
+        ConsoleFormatter.printHeader("SELECT YOUR PROTEIN");
+        System.out.println();
+
+        System.out.printf("%sProtein Pricing:%s\n", ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+        System.out.println("  Small: $1.00 ($0.50 - Extra)");
+        System.out.println("  Medium: $2.00 ($1.00 - Extra)");
+        System.out.println("  Large: $3.00 ($1.50 - Extra)");
+        System.out.println();
+
         ArrayList<Protein> proteins = loadProteins();
 
         int proteinCounter = 1;
         for (Protein protein : proteins) {
-            System.out.printf("%d) %s\n", proteinCounter++, protein.getName());
+            ConsoleFormatter.printMenuItem(proteinCounter++, protein.getName());
         }
-        System.out.println("0) No protein");
+        ConsoleFormatter.printMenuItem(0, "No protein");
+        ConsoleFormatter.printDivider();
 
+        System.out.println("\nYour choice");
         int proteinChoice = scanner.nextInt();
         scanner.nextLine();
 
         if (proteinChoice > 0 && proteinChoice <= proteins.size()) {
             Protein selectedProtein = new Protein(proteins.get(proteinChoice - 1).getName());
 
-            System.out.println("Would you like extra Protein?(Small: $.50, Medium: $1.00, Large: $1.50\n1. Yes\n2. No\n");
+            ConsoleFormatter.clearScreen();
+            System.out.printf("%sWould you like extra Protein?%s\n\n", ConsoleFormatter.BOLD, ConsoleFormatter.RESET);
+            System.out.printf("%sExtra Protein Pricing:%s\n", ConsoleFormatter.YELLOW, ConsoleFormatter.RESET);
+            System.out.println("  Small: $0.50");
+            System.out.println("  Medium: $1.00");
+            System.out.println("  Large: $1.50");
+            System.out.println();
+
+            ConsoleFormatter.printMenuItem(1, "Yes");
+            ConsoleFormatter.printMenuItem(2, "No");
+            ConsoleFormatter.printDivider();
+
+            System.out.println("\nYour choice: ");
             int extraProteinSelected = scanner.nextInt();
             selectedProtein.setExtra(extraProteinSelected == 1);
             scanner.nextLine();
 
             item.setProtein(selectedProtein);
+
+            if (selectedProtein.isExtra()) {
+                ConsoleFormatter.printSuccess(String.format("Extra %s added!", selectedProtein.getName()));
+            } else {
+                ConsoleFormatter.printSuccess(String.format("%s added!", selectedProtein.getName()));
+            }
+            promptUserForEnter();
         }
     }
 
