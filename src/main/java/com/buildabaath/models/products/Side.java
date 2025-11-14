@@ -15,6 +15,6 @@ public class Side extends Item {
 
     @Override
     public String getDescription() {
-        return super.getName() + "(Side)";
+        return super.getName() + " (Side)";
     }
 }

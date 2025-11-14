@@ -313,7 +313,7 @@ public class UserInterface {
             System.out.println(item.getDescription());
             System.out.print("Price: ");
             ConsoleFormatter.printPrice(item.calculatePrice());
-
+            System.out.println();
         }
     }
 
@@ -350,11 +350,11 @@ public class UserInterface {
         ConsoleFormatter.printHeader("SELECT A DRINK");
         System.out.println();
 
-        ConsoleFormatter.printMenuItem(1, "☕ Filter Coffee");
-        ConsoleFormatter.printMenuItem(2, "🍵 Masala Tea");
+        ConsoleFormatter.printMenuItem(1, "☕️ Filter Coffee");
+        ConsoleFormatter.printMenuItem(2, "🫖 Masala Tea");
         ConsoleFormatter.printMenuItem(3, "🥛 Badam Milk");
         ConsoleFormatter.printMenuItem(4, "🥤 Thums Up");
-        ConsoleFormatter.printMenuItem(5, "🍊 Maaza");
+        ConsoleFormatter.printMenuItem(5, "🥭 Maaza");
         ConsoleFormatter.printDivider();
 
         System.out.println("\nYour choice: ");
