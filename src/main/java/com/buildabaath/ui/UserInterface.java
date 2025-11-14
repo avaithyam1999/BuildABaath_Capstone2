@@ -43,6 +43,7 @@ public class UserInterface {
                         System.out.printf("""
                                 ==========Order Screen==========
                                 Items already in Order: %d
+                                Current Order Total: %.2f
                                 1. Add Main Item
                                 2. Add a Specialty Item
                                 3. Add Drink
@@ -50,7 +51,7 @@ public class UserInterface {
                                 5. Add Dessert
                                 6. View Order Details
                                 7. Cancel Order
-                                """, currentOrder.getItems().size());
+                                """, currentOrder.getItems().size(), currentOrder.getTotalPrice());
                         int userOrderMenuChoice = scanner.nextInt();
                         scanner.nextLine();
 
@@ -75,66 +76,33 @@ public class UserInterface {
                                 System.out.println(itemTypeChoice + "selected.\n Which size would you like?\n1. Small\n2. Medium\n3. Large\n");
                                 int sizeChoice = scanner.nextInt();
                                 scanner.nextLine();
-                                String size = switch (sizeChoice) {
-                                    case 2 -> "medium";
-                                    case 3 -> "large";
-                                    default -> "small";
+                                String mainSize = "";
+                                switch (sizeChoice) {
+                                    case 1 -> {
+                                        mainSize = "small";
+                                    }
+                                    case 2 -> {
+                                        mainSize = "medium";
+                                    }
+                                    case 3 -> {
+                                        mainSize = "large";
+                                    }
+                                    default -> {
+                                        System.out.println("Invalid size choice");
+                                    }
                                 };
-                                MainItem item = new MainItem(selectedType, size);
+                                MainItem item = new MainItem(selectedType, mainSize);
 
                                 addProteinToItem(item);
-
-                                boolean addingToppings = true;
-                                toppingLoop: while (addingToppings) {
-                                    System.out.println("""
-                                ======Add Premium Toppings=====
-                                Premium Topping Pricing:
-                                Small: $.75 ($.30 - Extra)
-                                Medium: $1.50 ($.60 - Extra)
-                                Large: $2.25 ($.90 - Extra)
-                                """);
-                                    ArrayList<PremiumTopping> premiumToppings = loadPremiumToppings();
-
-                                    int premiumToppingCounter = 1;
-                                    for (PremiumTopping premiumTopping : premiumToppings) {
-                                        System.out.printf(("%d) %s\n"), premiumToppingCounter++, premiumTopping.getName());
-                                    }
-                                    System.out.println("9) Done adding Premium Toppings\n0)Skip Premium Toppings");
-
-                                    int premiumToppingChoice = scanner.nextInt();
-                                    scanner.nextLine();
-
-                                    if (premiumToppingChoice == 9 || premiumToppingChoice == 0) {
-                                        break toppingLoop;
-                                    } else if (premiumToppingChoice > 0 && premiumToppingChoice <= premiumToppings.size()) {
-                                        PremiumTopping selectedPremiumTopping = new PremiumTopping(premiumToppings.get(premiumToppingChoice - 1).getName());
-
-                                        System.out.printf("""
-                                                Would you like extra %s?
-                                                Extra Premium Topping Pricing:
-                                                Small: $.30
-                                                Medium: $.60
-                                                Large: $.90
-                                                1. Yes
-                                                2. No
-                                                """, selectedPremiumTopping);
-                                        int extraPremiumSelection = scanner.nextInt();
-                                        selectedPremiumTopping.setExtra(extraPremiumSelection == 1);
-
-                                        item.getPremiumToppings().add(selectedPremiumTopping);
-                                        if (selectedPremiumTopping.isExtra()) {
-                                            System.out.printf("Extra %s Added!", selectedPremiumTopping);
-                                        } else if (!selectedPremiumTopping.isExtra()) {
-                                            System.out.printf("%s Added!", selectedPremiumTopping);
-                                        }
-                                    }
-                                }
+                                addPremiumToppingsToItem(item);
+                                addRegularToppingsToItem(item);
+                                addSauceToItem(item);
                             }
                             case 3 -> {
-//                                addDrink();
+                                addDrinkToOrder(currentOrder);
                             }
                             case 4 -> {
-//                                addSideItem();
+                                addSideToOrder(currentOrder);
                             }
                             case 5 -> {
 //                                viewOrder();
@@ -154,6 +122,190 @@ public class UserInterface {
                     break mainLoop;
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + mainUserChoice);
+            }
+        }
+    }
+
+    private void addSideToOrder(Order currentOrder) {
+        System.out.println("====Select a Side====");
+        ArrayList<Side> sides = loadSides();
+
+        int sideCounter = 1;
+        for (Side side : sides) {
+            System.out.printf("%d) %s - $1.50\n", sideCounter++, side.getName());
+        }
+
+        int sideChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (sideChoice > 0 && sideChoice <= sides.size()) {
+            Side side = new Side(sides.get(sideChoice - 1).getName());
+            currentOrder.addItem(side);
+            System.out.println(sideChoice + "added to order!");
+        } else {
+            System.out.println("Invalid Side Option.\n");
+        }
+    }
+
+    private void addDrinkToOrder(Order currentOrder) {
+        System.out.println("""
+                ====Select a Drink====
+                1. Filter Coffee
+                2. Masala Tea
+                3. Badam Milk
+                4. Thums Up
+                5. Maaza
+                """);
+        int drinkChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        String drinkName = "";
+        switch (drinkChoice) {
+            case 1 -> {
+                drinkName = "Filter Coffee";
+            }
+            case 2 -> {
+                drinkName = "Masala Tea";
+            }
+            case 3 -> {
+                drinkName = "Badam Milk";
+            }
+            case 4 -> {
+                drinkName = "Thums Up";
+            }
+            case 5 -> {
+                drinkName = "Maaza";
+            }
+            default -> {
+                System.out.println("Invalid drink choice");
+            }
+        }
+
+        System.out.println("""
+                What size?
+                1. Small - $2.00
+                2. Medium - $2.50
+                3. Large - $3.00
+                """);
+        int sizeChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        String drinkSize = "";
+        switch (sizeChoice) {
+            case 1 -> {
+                drinkSize = "small";
+            }
+            case 2 -> {
+                drinkSize = "medium";
+            }
+            case 3 -> {
+                drinkSize = "large";
+            }
+            default -> {
+                System.out.println("invalid choice");
+            }
+        }
+        ;
+
+        Drink drink = new Drink(drinkName, drinkSize);
+        currentOrder.addItem(drink);
+        System.out.printf("\n%s %s added to order!", drinkSize, drinkName);
+    }
+
+    private void addSauceToItem(MainItem item) {
+        boolean addingSauces = true;
+
+        sauceyLoop:while (addingSauces) {
+            System.out.println("=====Add Sauce(ALSO FREE?!?!");
+            ArrayList<Sauce> sauces = loadSauces();
+             int sauceCounter = 1;
+            for (Sauce sauce : sauces) {
+                System.out.printf("%d) %s\n", sauceCounter++, sauce.getName());
+            }
+            System.out.println("0) Done adding sauces");
+
+            int sauceChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (sauceChoice == 0) {
+                addingSauces = false;
+            } else if (sauceChoice > 0 && sauceChoice <= sauces.size()) {
+                Sauce selectedSauce = new Sauce(sauces.get(sauceChoice - 1).getName());
+                item.getSauces().add(selectedSauce);
+                System.out.println(selectedSauce + "added!");
+            }
+        }
+    }
+
+    private void addRegularToppingsToItem(MainItem item) {
+        boolean addingRegularToppings = true;
+        regularToppingLoop: while (addingRegularToppings) {
+            System.out.println("=======Add Regular Toppings(FREE!!)");
+            ArrayList<RegularTopping> regularToppings = loadRegularToppings();
+
+            int counter = 1;
+            for (RegularTopping regularTopping : regularToppings) {
+                System.out.printf("%d) %s\n", counter++, regularTopping.getName());
+            }
+            System.out.println("0) Done adding regular toppings");
+
+            int regularToppingChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (regularToppingChoice == 0) {
+                addingRegularToppings = false;
+            } else if (regularToppingChoice > 0 && regularToppingChoice <= regularToppings.size()) {
+                RegularTopping selectedRegularTopping = new RegularTopping(regularToppings.get(regularToppingChoice - 1).getName());
+                item.getRegularToppings().add(selectedRegularTopping);
+                System.out.println("Added!");
+            }
+        }
+    }
+
+    private void addPremiumToppingsToItem(MainItem item) {
+        boolean addingToppings = true;
+        toppingLoop: while (addingToppings) {
+            System.out.println("""
+        ======Add Premium Toppings=====
+        Premium Topping Pricing:
+        Small: $.75 ($.30 - Extra)
+        Medium: $1.50 ($.60 - Extra)
+        Large: $2.25 ($.90 - Extra)
+        """);
+            ArrayList<PremiumTopping> premiumToppings = loadPremiumToppings();
+
+            int premiumToppingCounter = 1;
+            for (PremiumTopping premiumTopping : premiumToppings) {
+                System.out.printf(("%d) %s\n"), premiumToppingCounter++, premiumTopping.getName());
+            }
+            System.out.println("9) Done adding Premium Toppings\n0)Skip Premium Toppings");
+
+            int premiumToppingChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (premiumToppingChoice == 9 || premiumToppingChoice == 0) {
+                break toppingLoop;
+            } else if (premiumToppingChoice > 0 && premiumToppingChoice <= premiumToppings.size()) {
+                PremiumTopping selectedPremiumTopping = new PremiumTopping(premiumToppings.get(premiumToppingChoice - 1).getName());
+
+                System.out.printf("""
+                        Would you like extra %s?
+                        Extra Premium Topping Pricing:
+                        Small: $.30
+                        Medium: $.60
+                        Large: $.90
+                        1. Yes
+                        2. No
+                        """, selectedPremiumTopping);
+                int extraPremiumSelection = scanner.nextInt();
+                selectedPremiumTopping.setExtra(extraPremiumSelection == 1);
+
+                item.getPremiumToppings().add(selectedPremiumTopping);
+                if (!selectedPremiumTopping.isExtra()) {
+                    System.out.printf("Extra %s Added!", selectedPremiumTopping);
+                } else {
+                    System.out.printf("%s Added!", selectedPremiumTopping);
+                }
             }
         }
     }
