@@ -149,6 +149,13 @@ public class UserInterface {
                                 int specializedChoice = scanner.nextInt();
                                 scanner.nextLine();
 
+                                if (specializedChoice == 1) {
+                                    item.setSpecialtyItem(true);
+                                    item.setBasePrice(item.getBasePrice() + 2.00);
+                                    ConsoleFormatter.printSuccess("Your dish will be served in a Tandoori Clay Pot!!!");
+                                    promptUserForEnter();
+                                }
+
                                 currentOrder.addItem(item);
                                 currentOrder.updateTotalPrice();
                                 ConsoleFormatter.printSuccess(String.format("%s %s added to order!", mainSize, selectedType.getDisplayName()));
@@ -279,7 +286,7 @@ public class UserInterface {
                             }
                             case 6 -> {
                                 if (currentOrder.getItems().isEmpty()) {
-                                    ConsoleFormatter.printWarning("Your order is empty. Add an item and then checkout");
+                                    ConsoleFormatter.printWarning("Your order is empty. You can't checkout if there's nothing to checkout bro...");
                                     promptUserForEnter();
                                 } else {
                                     checkOutOrder(currentOrder);
