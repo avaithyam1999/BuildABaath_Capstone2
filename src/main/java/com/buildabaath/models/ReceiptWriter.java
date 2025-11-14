@@ -30,7 +30,7 @@ public class ReceiptWriter {
 
         for (Item item : items) {
             itemList += item.getDescription();
-            itemList += String.format("Price: $%.2f\n\n", item.calculatePrice());
+            itemList += String.format("\nItem Price: $%.2f\n\n", item.calculatePrice());
         }
 
         String receipt = String.format("""
