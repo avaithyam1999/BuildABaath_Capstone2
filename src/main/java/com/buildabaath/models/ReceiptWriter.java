@@ -43,6 +43,10 @@ public class ReceiptWriter {
                 Total: $%.2f
                 Tip Amount: %.2f
                 
+                SIGN HERE:
+                
+                __________________________
+                
                 Thank you for your business
                 Please come again!
                 """, order.getOrderID(), order.getOrderTime(), itemList, order.getTotalPrice(), order.getTipAmount());
