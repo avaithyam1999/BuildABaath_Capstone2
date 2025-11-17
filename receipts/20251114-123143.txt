@@ -1,0 +1,30 @@
+==Build A Baath Receipt==
+=========================
+ORDER NUMBER: 626
+Order Time: Nov 14 2025 12:31 PM
+
+medium Dum Biryani
+ - Tandoori Chicken (Extra Protein)
+ - Saffron Cauliflower Poriyal
+ - Lettuce
+ - Kadhai Gravy
+ - Dahi
+ - ***SPECIALTY ITEM***
+Item Price: $13.00
+
+medium Filter Coffee (Drink)
+Item Price: $3.75
+
+
+
+Total: $16.75
+Tip Amount: 1.68
+
+Grand Total: $18.43
+
+SIGN HERE:
+
+__________________________
+
+Thank you for your business
+Please come again!

@@ -1,6 +1,6 @@
 package com.buildabaath;
 
-import com.buildabaath.ui.UserInterface;
+import com.buildabaath.models.ui.UserInterface;
 
 public class Program {
     public static void main(String[] args) {

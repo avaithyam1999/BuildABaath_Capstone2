@@ -1,6 +1,6 @@
-package com.buildabaath.ui;
+package com.buildabaath.models.ui;
 
-import com.buildabaath.models.ReceiptWriter;
+import com.buildabaath.models.data.ReceiptWriter;
 import com.buildabaath.models.abstracts.Item;
 import com.buildabaath.models.products.*;
 import com.buildabaath.models.properties.MainItemType;

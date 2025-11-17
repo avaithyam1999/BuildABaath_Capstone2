@@ -1,4 +1,4 @@
-package com.buildabaath.models;
+package com.buildabaath.models.data;
 
 import com.buildabaath.models.abstracts.Item;
 import com.buildabaath.models.products.Order;

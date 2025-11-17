@@ -1,0 +1,38 @@
+==Build A Baath Receipt==
+=========================
+ORDER NUMBER: 1093
+Order Time: Nov 14 2025 13:51 PM
+
+medium Dum Biryani
+ - Nandu(Crab) Curry (Extra Protein)
+ - Paneer Bhurji (Extra Premium Topping)
+ - Beet Root
+ - Butter Masala Gravy
+ - ***SPECIALTY ITEM***
+Item Price: $13.60
+
+large Thums Up (Drink)
+Item Price: $4.20
+
+large Maaza (Drink)
+Item Price: $4.20
+
+Chicken Tikka Samosa (Side)
+Item Price: $1.50
+
+small Jalebi (Dessert)
+Item Price: $2.50
+
+
+
+Total: $26.00
+Tip Amount: 13.00
+
+Grand Total: $39.00
+
+SIGN HERE:
+
+__________________________
+
+Thank you for your business
+Please come again!

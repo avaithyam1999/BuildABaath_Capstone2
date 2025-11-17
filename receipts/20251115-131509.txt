@@ -1,0 +1,47 @@
+==Build A Baath Receipt==
+=========================
+ORDER NUMBER: 971
+Order Time: Nov 15 2025 13:15 PM
+
+large Street Samosa Chaat
+ - Nandu(Crab) Curry
+ - Paneer Bhurji
+ - Saffron Cauliflower Poriyal (Extra Premium Topping)
+ - Cucumbers
+ - Beet Root
+ - Bell Peppers
+ - Jalapeños
+ - Raw Onions
+ - Carrots
+ - Cilantro
+ - Tomato
+ - Lettuce
+ - Dahi
+ - ***SPECIALTY ITEM***
+Item Price: $19.40
+
+large Badam Milk (Drink)
+Item Price: $4.20
+
+medium Filter Coffee (Drink)
+Item Price: $3.75
+
+Paneer Tikka Samosa (Side)
+Item Price: $1.50
+
+large Ras Malai (Dessert)
+Item Price: $5.50
+
+
+
+Total: $34.35
+Tip Amount: 0.00
+
+Grand Total: $34.35
+
+SIGN HERE:
+
+__________________________
+
+Thank you for your business
+Please come again!

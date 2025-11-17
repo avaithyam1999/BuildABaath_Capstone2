@@ -1,0 +1,29 @@
+==Build A Baath Receipt==
+=========================
+ORDER NUMBER: 702
+Order Time: Nov 14 2025 13:56 PM
+
+*** Tandoori Deluxe Bowl *** - large Basmati Baath Bowl
+ - Tandoori Chicken
+ - Paneer Bhurji
+ - Soft Boiled Egg
+ - Cucumbers
+ - Bell Peppers
+ - Raw Onions
+ - Butter Masala Gravy
+ - Mint Chutney
+Item Price: $10.50
+
+
+
+Total: $10.50
+Tip Amount: 1.58
+
+Grand Total: $12.08
+
+SIGN HERE:
+
+__________________________
+
+Thank you for your business
+Please come again!
