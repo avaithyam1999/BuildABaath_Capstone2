@@ -1,6 +1,6 @@
 package com.buildabaath.models.abstracts;
 
-import com.buildabaath.interfaces.Priceable;
+import com.buildabaath.models.interfaces.Priceable;
 
 public abstract class Item implements Priceable {
     private String name;
