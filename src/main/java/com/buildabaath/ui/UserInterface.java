@@ -43,7 +43,7 @@ public class UserInterface {
             switch (choice) {
                 case 1 -> {
                     if (processNewOrder()) {
-                        running = false; // Exit program after successful order
+                        running = false;
                     }
                 }
                 case 2 -> {
@@ -74,12 +74,12 @@ public class UserInterface {
                 case 5 -> addDessertToOrder(currentOrder);
                 case 6 -> {
                     if (handleCheckout(currentOrder)) {
-                        return true; // Order completed - exit program
+                        return true;
                     }
                 }
                 case 7 -> {
                     ConsoleFormatter.printBox("Order Cancelled. Lame.");
-                    return false; // Order cancelled - return to main menu
+                    return false;
                 }
                 default -> {
                     ConsoleFormatter.printBox("Invalid Option.\n Try again");
@@ -734,9 +734,9 @@ public class UserInterface {
 
         if (confirmOrder(currentOrder)) {
             saveReceipt(currentOrder);
-            return true; // Exit program
+            return true;
         }
-        return false; // Continue ordering
+        return false;
     }
 
     private boolean confirmOrder(Order currentOrder) {
@@ -1299,7 +1299,6 @@ public class UserInterface {
         scanner.nextLine();
     }
 
-    // Data loading methods
     private ArrayList<MainItemType> loadMainItemTypes() {
         ArrayList<MainItemType> types = new ArrayList<>();
         types.add(new MainItemType("Rice", "Basmati Baath Bowl", 3.50, 6.00, 8.50));
