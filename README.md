@@ -125,22 +125,22 @@ private void checkOutOrder(Order currentOrder) {
 
         switch (tipAmountChoice) {
             case 1 -> {
-                currentOrder.setTipAmount(15.00);
+                currentOrder.setTipPercentage(15.00);
             }
             case 2 -> {
-                currentOrder.setTipAmount(20.00);
+                currentOrder.setTipPercentage(20.00);
             }
             case 3 -> {
-                currentOrder.setTipAmount(25.00);
+                currentOrder.setTipPercentage(25.00);
             }
             case 4 -> {
                 System.out.println("Enter Tip Percentage: \n");
                 double customTipAmount = scanner.nextDouble();
                 scanner.nextLine();
-                currentOrder.setTipAmount(customTipAmount);
+                currentOrder.setTipPercentage(customTipAmount);
             }
             case 5 -> {
-                currentOrder.setTipAmount(0);
+                currentOrder.setTipPercentage(0);
             }
         }
         ConsoleFormatter.clearScreen();
