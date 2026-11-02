@@ -51,17 +51,20 @@ public class Order {
         return tipAmount;
     }
 
-    public void setTipAmount(double percentage) {
-        this.tipPercentage = percentage;
-        this.tipAmount = totalPrice * (percentage / 100.0);
-    }
-
     public double getTipPercentage() {
         return tipPercentage;
     }
 
-    public void setTipPercentage(double tipPercentage) {
-        this.tipPercentage = tipPercentage;
+    /**
+     * Sets the tip as a percentage of the subtotal (e.g. 20 means 20%).
+     * The dollar amount is calculated from the current subtotal.
+     */
+    public void setTipPercentage(double percentage) {
+        if (percentage < 0 || percentage > 100) {
+            throw new IllegalArgumentException("Tip percentage must be between 0 and 100");
+        }
+        this.tipPercentage = percentage;
+        this.tipAmount = totalPrice * (percentage / 100.0);
     }
 
     public LocalDateTime getOrderTime() {

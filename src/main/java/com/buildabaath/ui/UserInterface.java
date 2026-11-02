@@ -785,8 +785,12 @@ public class UserInterface {
         displayTipOptions(currentOrder);
 
         System.out.print("\nYour choice: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice;
+        try {
+            choice = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            choice = -1; // handled by the default case
+        }
 
         processTipChoice(currentOrder, choice);
     }
@@ -811,16 +815,31 @@ public class UserInterface {
 
     private void processTipChoice(Order currentOrder, int choice) {
         switch (choice) {
-            case 1 -> currentOrder.setTipAmount(15.00);
-            case 2 -> currentOrder.setTipAmount(20.00);
-            case 3 -> currentOrder.setTipAmount(25.00);
-            case 4 -> {
-                System.out.print("Enter Tip Percentage: ");
-                double customTip = scanner.nextDouble();
-                scanner.nextLine();
-                currentOrder.setTipAmount(customTip);
+            case 1 -> currentOrder.setTipPercentage(15);
+            case 2 -> currentOrder.setTipPercentage(20);
+            case 3 -> currentOrder.setTipPercentage(25);
+            case 4 -> currentOrder.setTipPercentage(promptForCustomTipPercentage());
+            case 5 -> currentOrder.setTipPercentage(0);
+            default -> {
+                System.out.println("Invalid choice, please pick 1-5.");
+                promptForTip(currentOrder);
             }
-            case 5 -> currentOrder.setTipAmount(0);
+        }
+    }
+
+    private double promptForCustomTipPercentage() {
+        while (true) {
+            System.out.print("Enter Tip Percentage (0-100): ");
+            String input = scanner.nextLine().trim().replace("%", "");
+            try {
+                double percentage = Double.parseDouble(input);
+                if (percentage >= 0 && percentage <= 100) {
+                    return percentage;
+                }
+            } catch (NumberFormatException ignored) {
+                // fall through to the error message below
+            }
+            System.out.println("Please enter a number between 0 and 100.");
         }
     }
 
